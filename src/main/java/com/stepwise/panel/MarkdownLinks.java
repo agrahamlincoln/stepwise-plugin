@@ -1,7 +1,5 @@
 package com.stepwise.panel;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,6 +26,16 @@ final class MarkdownLinks
 	 * {@code %29}). Anything else is plain text.
 	 */
 	static final Pattern LINK = Pattern.compile("\\[([^\\[\\]\\r\\n]+)]\\((https?://[^\\s()]+)\\)");
+
+	/**
+	 * A URL a click can open: http(s), a host, then only the characters RFC 3986 allows, with
+	 * every {@code %} starting a two-digit escape. {@code LinkBrowser.browse} parses the URL
+	 * and throws on anything else, which would happen on the EDT inside the click handler.
+	 *
+	 * @see <a href="https://www.rfc-editor.org/rfc/rfc3986#appendix-A">RFC 3986, appendix A</a>
+	 */
+	private static final Pattern BROWSABLE_URL = Pattern.compile(
+		"https?://[A-Za-z0-9.-]+(?::[0-9]+)?(?:[/?#](?:[A-Za-z0-9\\-._~/?#@!$&'*+,;=:]|%[0-9A-Fa-f]{2})*)?");
 
 	/**
 	 * First character of the placeholders that stand in for links while {@link TextMarkup}
@@ -251,26 +259,15 @@ final class MarkdownLinks
 	}
 
 	/**
-	 * Whether a click could open this URL. {@link #LINK} already admits only http(s), but a
-	 * well-formed link can still hold a character {@code URI.create} rejects ({@code |}, an
-	 * opening brace, a quote); {@code LinkBrowser.browse} would then throw on the EDT inside the
-	 * click handler, so such a link reads as plain text instead.
+	 * Whether a click could open this URL. {@link #LINK} admits any non-space run after
+	 * {@code http(s)://}, so a link holding a character {@code LinkBrowser.browse} rejects
+	 * ({@code |}, a brace, a quote) reads as plain text instead.
 	 *
 	 * @param url the link target
-	 * @return true when the URL parses, names a host, and is http or https
+	 * @return true when the URL matches {@link #BROWSABLE_URL}
 	 */
 	static boolean isBrowsable(String url)
 	{
-		try
-		{
-			URI uri = new URI(url);
-			String scheme = uri.getScheme();
-			return uri.getHost() != null
-				&& ("https".equalsIgnoreCase(scheme) || "http".equalsIgnoreCase(scheme));
-		}
-		catch (URISyntaxException e)
-		{
-			return false;
-		}
+		return BROWSABLE_URL.matcher(url).matches();
 	}
 }
