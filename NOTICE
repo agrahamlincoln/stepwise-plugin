@@ -1,0 +1,160 @@
+Stepwise: BRUHsailer Guide
+Copyright (c) 2026, agrahamlincoln
+
+Stepwise is licensed under the BSD 2-Clause License (see LICENSE). It includes, or is derived
+from, the works below. Each keeps its own license; Stepwise's license does not cover them.
+
+
+BRUHsailer Ironman guide
+------------------------
+By So Iron BRUH and ParasailerOSRS.
+  Interactive guide: https://umkyzn.github.io/BRUHsailer/
+  OSRS Wiki page:    https://oldschool.runescape.wiki/w/Guide:BRUHsailer
+
+Stepwise follows the BRUHsailer route. The side panel shows the guide's original text, and the
+step breakdown, items needed and budget figures are built from the guide and its budget ledger.
+All rights to the guide remain with its authors.
+
+
+Quest Helper
+------------
+https://github.com/Zoinkwiz/quest-helper
+
+Quest stage descriptions and quest var ids come from Quest Helper's quest data. Its quest files
+carry their own copyright notices under the license below. The files Stepwise's stage
+descriptions come from carry these:
+
+  Copyright (c) 2019, Trevor <https://github.com/Trevor159>
+  Copyright (c) 2020, andmcadams
+  Copyright (c) 2020, itofu1
+  Copyright (c) 2020, Kijjuy
+  Copyright (c) 2020, Lesteenman <https://github.com/lesteenman>
+  Copyright (c) 2020, Patyfatycake <https://github.com/Patyfatycake/>
+  Copyright (c) 2020, Twinkle <https://github.com/twinkle-is-dum>
+  Copyright (c) 2020, Zantier
+  Copyright (c) 2020, Zoinkwiz
+  Copyright (c) 2020, Zoinkwiz <https://github.com/Zoinkwiz>
+  Copyright (c) 2021, Haavard
+  Copyright (c) 2021, Kerpackie <https://github.com/Kerpackie/>
+  Copyright (c) 2021, Lesteenman <https://github.com/lesteenman>
+  Copyright (c) 2021, Robert Maloney <https://github.com/robertmaloney>
+  Copyright (c) 2021, Zoinkwiz
+  Copyright (c) 2021, Zoinkwiz <https://github.com/Zoinkwiz>
+  Copyright (c) 2022, Fincap <https://github.com/Fincap>
+  Copyright (c) 2022, scatter <https://github.com/scatter-dev>
+  Copyright (c) 2022, zct8002 <https://github.com/zct8002>
+  Copyright (c) 2022, Zoinkwiz (https://github.com/Zoinkwiz)
+  Copyright (c) 2022, Zoinkwiz <https://github.com/Zoinkwiz>
+  Copyright (c) 2024, Haavardaw <https://github.com/Haavardaw>
+  Copyright (c) 2024, Zoinkwiz <https://github.com/Zoinkwiz>
+  Copyright (c) 2025, pajlada <https://github.com/pajlada>
+  Copyright (c) 2025, TTvanWillegen
+  Copyright (c) 2026, pajlada <rasmus.karlsson@pajlada.com>
+
+Quest Helper's own license:
+
+  BSD 2-Clause License
+
+  Copyright (c) 2020, Zoinkwiz
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  1. Redistributions of source code must retain the above copyright notice, this
+     list of conditions and the following disclaimer.
+
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+RuneLite
+--------
+https://github.com/runelite/runelite
+
+Stepwise's bird house tracking is derived from RuneLite's Time Tracking plugin code, and its
+achievement diary varbit ids come from the Varbits table. Stepwise also reads game state the
+way these RuneLite plugins do, and its comments cite them: Kingdom of Miscellania (dating the
+kingdom's values by when they last changed), Slayer (reading the task once its vars settle,
+and the Slayer master varbit) and Rune Pouch (the pouch's rune and quantity varbits). The Java
+file derived from the Time Tracking code keeps its upstream notices:
+
+  Copyright (c) 2018 Abex
+  Copyright (c) 2018, Daniel Teo <https://github.com/takuyakanbr>
+
+RuneLite's own license:
+
+  BSD 2-Clause License
+
+  Copyright (c) 2016-2017, Adam <Adam@sigterm.info>
+  All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions are met:
+
+  * Redistributions of source code must retain the above copyright notice, this
+    list of conditions and the following disclaimer.
+
+  * Redistributions in binary form must reproduce the above copyright notice,
+    this list of conditions and the following disclaimer in the documentation
+    and/or other materials provided with the distribution.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Old School RuneScape Wiki
+-------------------------
+https://oldschool.runescape.wiki/
+
+Item, quest, location and game-mechanic facts were checked against the OSRS Wiki, whose content
+is available under CC BY-NC-SA 3.0 (https://creativecommons.org/licenses/by-nc-sa/3.0/).
+
+
+Other references
+----------------
+- WikiSync API by the Weird Gloop team (https://github.com/weirdgloop/wikisync-api, MIT):
+  some quest var ids were resolved from its quest var table, and achievement diary task var ids
+  from its diary specs. Its license text follows.
+
+  Copyright (c) Jayden Bailey
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy of this
+  software and associated documentation files (the "Software"), to deal in the Software
+  without restriction, including without limitation the rights to use, copy, modify, merge,
+  publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons
+  to whom the Software is furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all copies or
+  substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+  INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+  PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+  FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+  OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+  DEALINGS IN THE SOFTWARE.
+
+
+Old School RuneScape and RuneScape are trademarks of Jagex Ltd. Stepwise: BRUHsailer Guide is
+not affiliated with or endorsed by Jagex.

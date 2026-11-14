@@ -1,0 +1,139 @@
+{
+  "exceptions": [
+    {
+      "itemIds": [
+        33117
+      ],
+      "note": "BRUHsailer: put the lamp from The Ides of Milk on Prayer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        13513
+      ],
+      "note": "BRUHsailer: put the book of arcane knowledge on Magic",
+      "skill": "Magic"
+    },
+    {
+      "itemIds": [
+        10586
+      ],
+      "note": "BRUHsailer: put the Contact! lamp on Attack, or on Defence once Attack is 60",
+      "skill": "Attack",
+      "then": "Defence",
+      "untilLevel": 60
+    },
+    {
+      "itemIds": [
+        27543
+      ],
+      "note": "BRUHsailer: put the Legends' Quest lamps on Herblore",
+      "skill": "Herblore"
+    },
+    {
+      "itemIds": [
+        7498
+      ],
+      "note": "BRUHsailer: put the Recipe for Disaster lamp on Herblore",
+      "skill": "Herblore"
+    },
+    {
+      "itemIds": [
+        11679
+      ],
+      "note": "BRUHsailer: put the King's Ransom lamp on Herblore",
+      "skill": "Herblore"
+    },
+    {
+      "fromStep": "2.2.17.4",
+      "itemIds": [
+        13147
+      ],
+      "note": "BRUHsailer: put the Varrock Hard diary lamp on Herblore",
+      "skill": "Herblore",
+      "untilStep": "2.3.1.2"
+    },
+    {
+      "itemIds": [
+        9656,
+        9657,
+        9658,
+        22415,
+        24690
+      ],
+      "note": "BRUHsailer: spend the Myreque quest tomes on Herblore",
+      "skill": "Herblore"
+    },
+    {
+      "fromStep": "2.2.29.1",
+      "itemIds": [
+        13146
+      ],
+      "note": "BRUHsailer: put the Fremennik Medium diary lamp on Herblore",
+      "skill": "Herblore",
+      "untilStep": "2.2.38.10"
+    },
+    {
+      "itemIds": [
+        25753
+      ],
+      "note": "BRUHsailer: put the lamps from A Night at the Theatre on Ranged",
+      "skill": "Ranged"
+    },
+    {
+      "itemIds": [
+        11157
+      ],
+      "note": "BRUHsailer: put the Dream Mentor lamp on Ranged",
+      "skill": "Ranged"
+    },
+    {
+      "itemIds": [
+        6543
+      ],
+      "note": "BRUHsailer: put the lamps from A Tail of Two Cats and Fairytale II - Cure a Queen on Slayer",
+      "skill": "Slayer"
+    },
+    {
+      "itemIds": [
+        30960
+      ],
+      "note": "BRUHsailer: put the lamp from The Final Dawn on Prayer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        27299
+      ],
+      "note": "BRUHsailer: put the Into the Tombs lamp on Strength",
+      "skill": "Strength"
+    },
+    {
+      "itemIds": [
+        28409
+      ],
+      "note": "BRUHsailer: put the lamps from Desert Treasure II - The Fallen Empire on Prayer",
+      "skill": "Prayer"
+    }
+  ],
+  "schedule": [
+    {
+      "fromStep": "1.1.1.1",
+      "note": "BRUHsailer: put lamps on Herblore unless a step says otherwise",
+      "skill": "Herblore"
+    },
+    {
+      "fallback": "Herblore",
+      "fromStep": "2.2.17.4",
+      "note": "BRUHsailer: put lamps on Slayer until 58 for cave horrors, then on Herblore again",
+      "skill": "Slayer",
+      "then": "Herblore",
+      "untilLevel": 58
+    },
+    {
+      "fromStep": "3.1.1.1",
+      "note": "BRUHsailer: put chapter 3 lamps on Herblore",
+      "skill": "Herblore"
+    }
+  ]
+}

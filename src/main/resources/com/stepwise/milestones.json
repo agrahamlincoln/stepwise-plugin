@@ -1,0 +1,998 @@
+{
+  "milestones": [
+    {
+      "anchor_step_id": "1.1.3.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Misthalin Mystery",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "draynor_arrived",
+      "label": "Lumbridge and Draynor Village (early 1.1)"
+    },
+    {
+      "anchor_step_id": "1.1.6.7",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Clock Tower",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monk's Friend",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Hazeel Cult",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "early_ardougne_complete",
+      "label": "Ardougne quest cluster (early 1.1)"
+    },
+    {
+      "anchor_step_id": "1.1.11.11",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Sea Slug",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Tribal Totem",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Vampyre Slayer",
+            "type": "questStarted"
+          },
+          {
+            "questName": "A Porcine of Interest",
+            "type": "questStarted"
+          },
+          {
+            "questName": "The Corsair Curse",
+            "type": "questStarted"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "port_sarim_complete",
+      "label": "Brimhaven and Port Sarim phase (mid 1.1)"
+    },
+    {
+      "anchor_step_id": "1.1.15.10",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Tribal Totem",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Ribbiting Tale of a Lily Pad Labour Dispute",
+            "type": "questComplete"
+          },
+          {
+            "level": 50,
+            "skill": "Firemaking",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Gertrude's Cat",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Daddy's Home",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Children of the Sun",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "pre_zeah_quests",
+      "label": "Mid-section quest cluster (before Great Kourend)"
+    },
+    {
+      "anchor_step_id": "1.1.18.3",
+      "criteria": {
+        "conditions": [
+          {
+            "level": 90,
+            "skill": "Firemaking",
+            "type": "skillLevel"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "wintertodt_phase_one",
+      "label": "First Wintertodt session to 90 Firemaking (late 1.1)"
+    },
+    {
+      "anchor_step_id": "1.1.18.3",
+      "criteria": {
+        "conditions": [
+          {
+            "level": 99,
+            "skill": "Firemaking",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Gertrude's Cat",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Daddy's Home",
+            "type": "questComplete"
+          },
+          {
+            "level": 30,
+            "skill": "Construction",
+            "type": "skillLevel"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "wintertodt_complete",
+      "label": "Wintertodt and early quests (end of 1.1)"
+    },
+    {
+      "anchor_step_id": "1.2.13.8",
+      "criteria": {
+        "conditions": [
+          {
+            "level": 50,
+            "skill": "Agility",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Fight Arena",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Tree Gnome Village",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Death on the Isle",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fishing Contest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Tourist Trap",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Feud",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Observatory Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Murder Mystery",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Knight's Sword",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Merlin's Crystal",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Prince Ali Rescue",
+            "type": "questStarted"
+          },
+          {
+            "questName": "The Grand Tree",
+            "type": "questStarted"
+          },
+          {
+            "questName": "The Queen of Thieves",
+            "type": "questStarted"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "fishing_thieving_phase",
+      "label": "Fishing and Thieving phase (late 1.2)"
+    },
+    {
+      "anchor_step_id": "1.3.12.5",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Fight Arena",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Tree Gnome Village",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Tourist Trap",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Jungle Potion",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Dig Site",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Elemental Workshop I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Golem",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "the_golem",
+      "label": "The Dig Site and The Golem (early 1.3)"
+    },
+    {
+      "anchor_step_id": "1.3.22.5",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "The Dig Site",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Elemental Workshop I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Rune Mysteries",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Demon Slayer",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Priest in Peril",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Nature Spirit",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Shades of Mort'ton",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Merlin's Crystal",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Elemental Workshop II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Dragon Slayer I",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Enter the Abyss",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Shadow of the Storm",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Holy Grail",
+            "type": "questStarted"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "morytania_quests_and_ew2",
+      "label": "Morytania quests and Elemental Workshop II (mid 1.3)"
+    },
+    {
+      "anchor_step_id": "1.3.30.16",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "The Fremennik Trials",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Lost City",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Vampyre Slayer",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Rag and Bone Man I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Bone Voyage",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fairytale I - Growing Pains",
+            "type": "questStarted"
+          },
+          {
+            "questName": "The Lost Tribe",
+            "type": "questStarted"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "bone_voyage",
+      "label": "Bird house runs unlocked (end of 1.3)"
+    },
+    {
+      "anchor_step_id": "1.4.15.17",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Troll Stronghold",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fairytale I - Growing Pains",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Creature of Fenkenstrain",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Ascent of Arceuus",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Holy Grail",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Grand Tree",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Enter the Abyss",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Plague City",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Below Ice Mountain",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "troll_country_and_zeah",
+      "label": "Troll Country and Great Kourend quest cluster (early 1.4)"
+    },
+    {
+      "anchor_step_id": "1.4.28.15",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Garden of Tranquillity",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Eyes of Glouphrie",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Eadgar's Ruse",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Biohazard",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Watchtower",
+            "type": "questComplete"
+          },
+          {
+            "questName": "My Arm's Big Adventure",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "ardougne_and_trollheim_quests",
+      "label": "Ardougne and Trollheim quests (late 1.4)"
+    },
+    {
+      "anchor_step_id": "1.4.34.1",
+      "criteria": {
+        "conditions": [
+          {
+            "level": 62,
+            "skill": "Farming",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "The Lost Tribe",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Shadow of the Storm",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fairytale I - Growing Pains",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Holy Grail",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Enter the Abyss",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Eadgar's Ruse",
+            "type": "questComplete"
+          },
+          {
+            "questName": "My Arm's Big Adventure",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Desert Treasure I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Prince Ali Rescue",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Twilight's Promise",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Hand in the Sand",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "desert_treasure_era",
+      "label": "Desert Treasure I and The Hand in the Sand (end of 1.4)"
+    },
+    {
+      "anchor_step_id": "2.1.5.8",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Desert Treasure I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Twilight's Promise",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Hand in the Sand",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Dragon Slayer I",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "dragon_slayer_one",
+      "label": "Dragon Slayer I (early 2.1)"
+    },
+    {
+      "anchor_step_id": "2.1.20.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Dragon Slayer I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Underground Pass",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Recruitment Drive",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Shilo Village",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Another Slice of H.A.M.",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Enakhra's Lament",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Spirits of the Elid",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Icthlarin's Little Helper",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "desert_quests",
+      "label": "Desert quest cluster (mid 2.1)"
+    },
+    {
+      "anchor_step_id": "2.1.30.4",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Underground Pass",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Black Knights' Fortress",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Recruitment Drive",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Death to the Dorgeshuun",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Icthlarin's Little Helper",
+            "type": "questComplete"
+          },
+          {
+            "questName": "In Search of the Myreque",
+            "type": "questComplete"
+          },
+          {
+            "questName": "In Aid of the Myreque",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Ghosts Ahoy",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Family Crest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monkey Madness I",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "monkey_madness_one",
+      "label": "Monkey Madness I (mid 2.1)"
+    },
+    {
+      "anchor_step_id": "2.1.45.3",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Heroes' Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Throne of Miscellania",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Royal Trouble",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "miscellania_unlocked",
+      "label": "Miscellania unlocked (end of 2.1)"
+    },
+    {
+      "anchor_step_id": "2.2.5.10",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "The Fremennik Isles",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Slug Menace",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Lunar Diplomacy",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "lunar_diplomacy",
+      "label": "Lunar Diplomacy (early 2.2)"
+    },
+    {
+      "anchor_step_id": "2.2.11.4",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Scorpion Catcher",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Contact!",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "contact_quest",
+      "label": "Contact! and Desert and Morytania quest cluster (mid 2.2)"
+    },
+    {
+      "anchor_step_id": "2.2.26.15",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Eagles' Peak",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Swan Song",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Making Friends with My Arm",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Legends' Quest",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "legends_quest",
+      "label": "Legends' Quest (late 2.2)"
+    },
+    {
+      "anchor_step_id": "2.2.26.19",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "A Tail of Two Cats",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Cold War",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Making History",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Recipe for Disaster",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "recipe_for_disaster",
+      "label": "Recipe for Disaster complete (late 2.2)"
+    },
+    {
+      "anchor_step_id": "2.2.32.17",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Recipe for Disaster",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Legends' Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "A Kingdom Divided",
+            "type": "questComplete"
+          },
+          {
+            "questName": "King's Ransom",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Perilous Moons",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Sins of the Father",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "sins_of_the_father",
+      "label": "Kourend and Varlamore quests (late 2.2)"
+    },
+    {
+      "anchor_step_id": "2.2.38.8",
+      "criteria": {
+        "conditions": [
+          {
+            "level": 60,
+            "skill": "Attack",
+            "type": "skillLevel"
+          },
+          {
+            "level": 60,
+            "skill": "Defence",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "A Kingdom Divided",
+            "type": "questComplete"
+          },
+          {
+            "questName": "His Faithful Servants",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Sins of the Father",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Curse of Arrav",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "sins_and_arrav",
+      "label": "Sins of the Father and The Curse of Arrav (late 2.2)"
+    },
+    {
+      "anchor_step_id": "2.3.14.11",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Dream Mentor",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Zogre Flesh Eaters",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fairytale II - Cure a Queen",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Grim Tales",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Rum Deal",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Cabin Fever",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Great Brain Robbery",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Regicide",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Roving Elves",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Mourning's End Part I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Mourning's End Part II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Song of the Elves",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "song_of_the_elves",
+      "label": "Song of the Elves — elf questline complete (end of 2.3)"
+    },
+    {
+      "anchor_step_id": "3.1.9.3",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "The Fremennik Exiles",
+            "type": "questComplete"
+          },
+          {
+            "questName": "A Night at the Theatre",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Hopespear's Will",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "post_slayer_quests",
+      "label": "The Fremennik Exiles and post-Slayer quests (end of 3.1)"
+    },
+    {
+      "anchor_step_id": "3.2.2.4",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "While Guthix Sleeps",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Dragon Slayer II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monkey Madness II",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "grandmaster_quests",
+      "label": "While Guthix Sleeps, Dragon Slayer II and Monkey Madness II (early 3.2)"
+    },
+    {
+      "anchor_step_id": "3.2.3.7",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Dragon Slayer II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monkey Madness II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Devious Minds",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Secrets of the North",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Beneath Cursed Sands",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Into the Tombs",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Desert Treasure II - The Fallen Empire",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "quest_cape_prep",
+      "label": "Desert Treasure II - The Fallen Empire and endgame quest cluster (early 3.2)"
+    },
+    {
+      "anchor_step_id": "3.2.5.5",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Dragon Slayer II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monkey Madness II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Desert Treasure II - The Fallen Empire",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Blood Moon Rises",
+            "type": "questComplete"
+          },
+          {
+            "level": 86,
+            "skill": "Smithing",
+            "type": "skillLevel"
+          },
+          {
+            "level": 75,
+            "skill": "Sailing",
+            "type": "skillLevel"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "sailing_seventy_five",
+      "label": "The Blood Moon Rises and 75 Sailing (mid 3.2)"
+    }
+  ]
+}
