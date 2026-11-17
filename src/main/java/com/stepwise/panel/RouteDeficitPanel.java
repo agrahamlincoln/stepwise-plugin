@@ -92,8 +92,8 @@ public class RouteDeficitPanel extends JPanel
 	/** Height budgeted for the GP line and each grid row: {@link #ICON_SIZE} plus headroom. */
 	private static final int ROW_HEIGHT = 20;
 	private static final int QUEST_ROW_HEIGHT = 15;
-	/** Quests listed by name; the rest are counted. */
-	static final int QUEST_ROWS_SHOWN = 8;
+	/** Quests, and separately diary tasks, listed by name; the rest are counted. */
+	static final int BEHIND_ROWS_SHOWN = 8;
 
 	private final RebuildGuard guard = new RebuildGuard();
 
@@ -130,6 +130,7 @@ public class RouteDeficitPanel extends JPanel
 	private boolean questsKnown;
 	private int questsBehind;
 	private int questsAhead;
+	private int diaryTasksBehind;
 
 	public RouteDeficitPanel()
 	{
@@ -176,6 +177,7 @@ public class RouteDeficitPanel extends JPanel
 			&& isEmpty(deficit.getSkills())
 			&& isEmpty(deficit.getQuestsBehind())
 			&& deficit.getQuestsAhead() == 0
+			&& isEmpty(deficit.getDiaryTasksBehind())
 			// Skip advice alone is enough to show the panel.
 			&& deficit.getSkipAdvice() == null;
 	}
@@ -223,6 +225,15 @@ public class RouteDeficitPanel extends JPanel
 				container.add(PanelColors.divider());
 			}
 			container.add(buildQuestRows(deficit.getQuestsBehind()));
+		}
+
+		if (!isEmpty(deficit.getDiaryTasksBehind()))
+		{
+			if (container.getComponentCount() > 0)
+			{
+				container.add(PanelColors.divider());
+			}
+			container.add(buildDiaryRows(deficit.getDiaryTasksBehind()));
 		}
 
 		RouteDeficit.SkipAdvice advice = deficit.getSkipAdvice();
@@ -280,6 +291,7 @@ public class RouteDeficitPanel extends JPanel
 		questsKnown = deficit.isQuestsKnown();
 		questsBehind = deficit.getQuestsBehind().size();
 		questsAhead = deficit.getQuestsAhead();
+		diaryTasksBehind = deficit.getDiaryTasksBehind().size();
 		skillsKnown = !isEmpty(deficit.getSkills());
 		skillsBehind = 0;
 		skillsAhead = 0;
@@ -413,6 +425,18 @@ public class RouteDeficitPanel extends JPanel
 		return iconProvider != null ? iconProvider.getQuestIcon(size) : null;
 	}
 
+	/** The diary tab's icon, or null when there is no icon source or it has not loaded. */
+	ImageIcon diaryIcon(int size)
+	{
+		return iconProvider != null ? iconProvider.getDiaryIcon(size) : null;
+	}
+
+	/** How many diary tasks the guide asks for before this step that the player has not done. */
+	int diaryTasksBehind()
+	{
+		return diaryTasksBehind;
+	}
+
 	/**
 	 * A heading with the quest tab's icon, then one row per quest: its name, and the step
 	 * that finishes it on the right. The list changes only when a quest finishes or the
@@ -420,18 +444,13 @@ public class RouteDeficitPanel extends JPanel
 	 */
 	private JPanel buildQuestRows(List<RouteDeficit.QuestBehind> quests)
 	{
-		JPanel panel = PanelSections.column();
-		panel.setBorder(BorderFactory.createEmptyBorder(4, 6, 5, 6));
-
 		JLabel heading = PanelSections.smallLabel(questsHeading(quests.size()), COLOR_BEHIND);
 		heading.setIcon(questIcon(ICON_SIZE));
 		heading.setIconTextGap(4);
 		heading.setToolTipText("Quests the guide finishes before this step");
-		panel.add(row(heading, null, false));
 
-		// A player far behind can owe well over a hundred quests, which would push the step
-		// card off the panel. The earliest come first, so they are the ones listed.
-		for (RouteDeficit.QuestBehind quest : quests.subList(0, Math.min(quests.size(), QUEST_ROWS_SHOWN)))
+		List<JPanel> lines = new ArrayList<>();
+		for (RouteDeficit.QuestBehind quest : quests.subList(0, Math.min(quests.size(), BEHIND_ROWS_SHOWN)))
 		{
 			JLabel name = PanelSections.smallLabel(
 				quest.getQuestName() + (quest.isStarted() ? " (started)" : ""),
@@ -441,26 +460,73 @@ public class RouteDeficitPanel extends JPanel
 			// Names the quest too: a long name is cut short in the row.
 			line.setToolTipText(quest.getQuestName() + ", which the guide finishes in entry "
 				+ entryOf(quest.getStepId()));
-			panel.add(line);
+			lines.add(line);
 		}
-		int unlisted = quests.size() - QUEST_ROWS_SHOWN;
+		return behindList(heading, lines, quests.size(), "quest", "quests");
+	}
+
+	/**
+	 * A heading, then one row per diary task: the task as its step names it, and the step's
+	 * entry on the right. Built like the quest rows, and for the same reason.
+	 */
+	private JPanel buildDiaryRows(List<RouteDeficit.DiaryTaskBehind> tasks)
+	{
+		JLabel heading = PanelSections.smallLabel(diaryHeading(tasks.size()), COLOR_BEHIND);
+		heading.setIcon(diaryIcon(ICON_SIZE));
+		heading.setIconTextGap(4);
+		heading.setToolTipText("Achievement diary tasks the guide has you do before this step");
+
+		List<JPanel> lines = new ArrayList<>();
+		for (RouteDeficit.DiaryTaskBehind task : tasks.subList(0, Math.min(tasks.size(), BEHIND_ROWS_SHOWN)))
+		{
+			JPanel line = row(PanelSections.smallLabel(task.getTask(), COLOR_GRID_BEHIND),
+				PanelSections.smallLabel(entryOf(task.getStepId()), COLOR_LABEL), true);
+			// Names the task too: a long task is cut short in the row.
+			line.setToolTipText(task.getTask() + ", which the guide has you do in entry "
+				+ entryOf(task.getStepId()));
+			lines.add(line);
+		}
+		return behindList(heading, lines, tasks.size(), "task", "tasks");
+	}
+
+	/**
+	 * A heading over the listed rows, with a closing count of the rest. A player far behind
+	 * can owe well over a hundred quests or tasks, which would push the step card off the
+	 * panel. The earliest come first, so they are the ones listed.
+	 */
+	private static JPanel behindList(JLabel heading, List<JPanel> lines, int total, String noun,
+		String nouns)
+	{
+		JPanel panel = PanelSections.column();
+		panel.setBorder(BorderFactory.createEmptyBorder(4, 6, 5, 6));
+		panel.add(row(heading, null, false));
+		lines.forEach(panel::add);
+		int unlisted = total - lines.size();
 		if (unlisted > 0)
 		{
 			panel.add(row(PanelSections.smallLabel(
-				unlisted + (unlisted == 1 ? " more quest" : " more quests"), COLOR_LABEL),
-				null, true));
+				unlisted + " more " + (unlisted == 1 ? noun : nouns), COLOR_LABEL), null, true));
 		}
 		return panel;
 	}
 
-	/** A quest heading row, or with {@code quest} set a quest's own row, indented under it. */
-	private static JPanel row(JLabel left, JLabel right, boolean quest)
+	/** "1 diary task behind" / "3 diary tasks behind". */
+	static String diaryHeading(int count)
+	{
+		return count + (count == 1 ? " diary task behind" : " diary tasks behind");
+	}
+
+	/**
+	 * A list's heading row, or with {@code listed} set one quest's or task's own row, indented
+	 * under it.
+	 */
+	private static JPanel row(JLabel left, JLabel right, boolean listed)
 	{
 		JPanel line = new JPanel(new BorderLayout(4, 0));
 		line.setOpaque(false);
 		line.setAlignmentX(LEFT_ALIGNMENT);
-		line.setMaximumSize(new Dimension(Integer.MAX_VALUE, quest ? QUEST_ROW_HEIGHT : ROW_HEIGHT));
-		line.setBorder(BorderFactory.createEmptyBorder(0, quest ? 4 : 0, 0, 0));
+		line.setMaximumSize(new Dimension(Integer.MAX_VALUE, listed ? QUEST_ROW_HEIGHT : ROW_HEIGHT));
+		line.setBorder(BorderFactory.createEmptyBorder(0, listed ? 4 : 0, 0, 0));
 		line.add(left, BorderLayout.CENTER);
 		if (right != null)
 		{
@@ -651,7 +717,7 @@ public class RouteDeficitPanel extends JPanel
 
 	/**
 	 * Structural inputs only: which entry, whether coins are readable, whether the skill grid
-	 * is shown, whether an earn arc is on offer, and the quest rows.
+	 * is shown, whether an earn arc is on offer, and the quest and diary task rows.
 	 *
 	 * <p>Excludes every displayed figure, which is written in place. The grid's cells are fixed,
 	 * so a level-up never changes its structure.
@@ -668,9 +734,13 @@ public class RouteDeficitPanel extends JPanel
 		// changes its label. The rest show only as a count.
 		List<RouteDeficit.QuestBehind> quests = deficit.getQuestsBehind();
 		sig.add("q:" + quests.size() + ":"
-			+ quests.subList(0, Math.min(quests.size(), QUEST_ROWS_SHOWN)));
+			+ quests.subList(0, Math.min(quests.size(), BEHIND_ROWS_SHOWN)));
 		// The heading bakes in the quest tab's icon, which loads after the first snapshots.
 		sig.add("qi:" + (!quests.isEmpty() && questIcon(ICON_SIZE) != null));
+		// The listed diary tasks by value, so a finished one drops its row.
+		List<RouteDeficit.DiaryTaskBehind> tasks = deficit.getDiaryTasksBehind();
+		sig.add("d:" + tasks.size() + ":" + tasks.subList(0, Math.min(tasks.size(), BEHIND_ROWS_SHOWN)));
+		sig.add("di:" + (!tasks.isEmpty() && diaryIcon(ICON_SIZE) != null));
 		return sig;
 	}
 

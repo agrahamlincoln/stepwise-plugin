@@ -2,7 +2,7 @@
   "title": "BRUHsailer Complete Guide",
   "version": "20261019",
   "schemaVersion": "2.0.0",
-  "canonicalVersion": "5.21.76",
+  "canonicalVersion": "5.21.84",
   "totalMinutes": 72000.0,
   "source": "bruhsailer",
   "chapters": [
@@ -307,7 +307,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1194,
-                    "bit": 5
+                    "bit": 5,
+                    "taskDescription": "Lumbridge & Draynor Easy: Talk to Hans to learn your age"
                   },
                   "prerequisites": [
                     "1.1.2.2"
@@ -780,7 +781,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1196,
-                    "bit": 9
+                    "bit": 9,
+                    "taskDescription": "Ardougne Easy: Use the Ardougne lever to teleport to the Wilderness"
                   },
                   "prerequisites": [
                     "1.1.4.3"
@@ -1491,7 +1493,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1196,
-                    "bit": 19
+                    "bit": 19,
+                    "taskDescription": "Ardougne Medium: Catch any fish on the Fishing Platform"
                   },
                   "prerequisites": [
                     "1.1.9.3"
@@ -2748,7 +2751,7 @@
                     "servesSteps": [
                       "2.1.20.1",
                       "2.2.11.4",
-                      "2.2.17.4",
+                      "2.2.17.5",
                       "2.2.18.2",
                       "2.2.21.5",
                       "2.2.26.19",
@@ -4360,7 +4363,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 2085,
-                    "bit": 10
+                    "bit": 10,
+                    "taskDescription": "Kourend & Kebos Easy: Complete a lap of the Shayzien Agility Course"
                   },
                   "prerequisites": [
                     "1.1.17.6"
@@ -5234,7 +5238,8 @@
                       {
                         "type": "varpBitValue",
                         "varpId": 2085,
-                        "bit": 5
+                        "bit": 5,
+                        "taskDescription": "Kourend & Kebos Easy: Browse the Warrens General Store"
                       }
                     ],
                     "mode": "all",
@@ -5383,7 +5388,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 2085,
-                    "bit": 8
+                    "bit": 8,
+                    "taskDescription": "Kourend & Kebos Easy: Dig up some saltpetre in Hosidius"
                   },
                   "prerequisites": [
                     "1.2.3.5"
@@ -5726,7 +5732,8 @@
                       {
                         "type": "varpBitValue",
                         "varpId": 1186,
-                        "bit": 0
+                        "bit": 0,
+                        "taskDescription": "Falador Easy: Find out your family crest from Sir Renitee"
                       },
                       {
                         "type": "hasItem",
@@ -7254,7 +7261,8 @@
                       {
                         "type": "varpBitValue",
                         "varpId": 1178,
-                        "bit": 2
+                        "bit": 2,
+                        "taskDescription": "Kandarin Easy: Buy a candle from the candle maker in Catherby"
                       }
                     ],
                     "mode": "all"
@@ -7313,7 +7321,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1178,
-                    "bit": 10
+                    "bit": 10,
+                    "taskDescription": "Kandarin Easy: Speak with Sherlock west of Catherby"
                   },
                   "prerequisites": [
                     "1.2.8.3"
@@ -7401,7 +7410,7 @@
                     "questName": "Fishing Contest",
                     "servesSteps": [
                       "1.4.13.1",
-                      "2.2.22.4",
+                      "2.2.22.5",
                       "2.2.26.19",
                       "2.3.9.3"
                     ]
@@ -7582,7 +7591,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1196,
-                    "bit": 7
+                    "bit": 7,
+                    "taskDescription": "Ardougne Easy: Have Tindel Marchant identify a rusty sword"
                   },
                   "prerequisites": [
                     "1.2.9.1"
@@ -8318,7 +8328,8 @@
                       {
                         "type": "varpBitValue",
                         "varpId": 1178,
-                        "bit": 21
+                        "bit": 21,
+                        "taskDescription": "Kandarin Medium: Kill a fire giant"
                       }
                     ],
                     "mode": "all"
@@ -8715,8 +8726,43 @@
               "steps": [
                 {
                   "id": "1.2.15.1",
+                  "instruction": "Leave your house, then enter it again through the Pollnivneach house portal for the Desert Medium diary",
+                  "completion": {
+                    "type": "composite",
+                    "conditions": [
+                      {
+                        "type": "varpBitValue",
+                        "varpId": 1199,
+                        "bit": 9,
+                        "taskDescription": "Desert Medium: Enter your house through the Pollnivneach portal"
+                      },
+                      {
+                        "type": "varpBitValue",
+                        "varpId": 1198,
+                        "bit": 22,
+                        "taskDescription": "Desert Medium: Teleport to Pollnivneach with a redirected house tablet"
+                      }
+                    ],
+                    "mode": "any"
+                  },
+                  "prerequisites": [
+                    "1.2.14.5"
+                  ],
+                  "preSteps": [
+                    {
+                      "instruction": "Break your last teleport to house tablet to reach Pollnivneach",
+                      "completion": {
+                        "type": "locationReached",
+                        "regionId": 13358,
+                        "regionName": "Pollnivneach"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "id": "1.2.15.2",
                   "instruction": "Blackjack until you have both 1.25M gp and 75 Thieving",
-                  "guidance": "Enter your house first for the Desert Medium diary task, then exit and start [blackjacking](https://www.youtube.com/watch?v=6wuG8IvxHbM). At lower Thieving the fail rate is significant, so drink wines from the local shop and power through. Work up through bearded bandits to 55, unbearded to 65, then Menaphite thugs from 65. Keep going to 75 Thieving even past the gp target; the Keldagrim gem stall needs it.",
+                  "guidance": "Leave your house and start [blackjacking](https://www.youtube.com/watch?v=6wuG8IvxHbM). At lower Thieving the fail rate is significant, so drink wines from the local shop and power through. Work up through bearded bandits to 55, unbearded to 65, then Menaphite thugs from 65. Keep going to 75 Thieving even past the gp target; the Keldagrim gem stall needs it.",
                   "completion": {
                     "type": "composite",
                     "conditions": [
@@ -8755,7 +8801,7 @@
                           "1.4.19.5",
                           "1.4.21.4",
                           "1.4.22.6",
-                          "1.4.23.6",
+                          "1.4.23.7",
                           "1.4.25.2",
                           "1.4.30.7",
                           "1.4.31.24",
@@ -8775,21 +8821,11 @@
                     "mode": "all"
                   },
                   "prerequisites": [
-                    "1.2.14.5"
-                  ],
-                  "preSteps": [
-                    {
-                      "instruction": "Break your last teleport to house tablet to reach Pollnivneach",
-                      "completion": {
-                        "type": "locationReached",
-                        "regionId": 13358,
-                        "regionName": "Pollnivneach"
-                      }
-                    }
+                    "1.2.15.1"
                   ]
                 },
                 {
-                  "id": "1.2.15.2",
+                  "id": "1.2.15.3",
                   "instruction": "Play Last Man Standing for a rune pouch",
                   "guidance": "Competitive games need 750 total level and 30 quest points. Pick the 1 Defence pure build. Outskill opponents, or rush the nearest player with dragon dagger specials, then cast Ice Barrage from range while wielding a crossbow. Justine sells the pouch as a note for 75 points once you have won a game; use the note on a bank.",
                   "completion": {
@@ -8799,7 +8835,7 @@
                     "itemId": 12791
                   },
                   "prerequisites": [
-                    "1.2.15.1"
+                    "1.2.15.2"
                   ],
                   "background": true,
                   "activation": {
@@ -8809,7 +8845,7 @@
                   "when": "At your convenience"
                 },
                 {
-                  "id": "1.2.15.3",
+                  "id": "1.2.15.4",
                   "instruction": "Optionally buy the magic shortbow imbue scroll from Justine as well",
                   "completion": {
                     "type": "hasItem",
@@ -8821,7 +8857,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "1.2.15.1"
+                    "1.2.15.2"
                   ],
                   "background": true,
                   "activation": {
@@ -8871,7 +8907,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "1.2.15.1"
+                    "1.2.15.2"
                   ],
                   "preSteps": [
                     {
@@ -9090,7 +9126,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1194,
-                    "bit": 18
+                    "bit": 18,
+                    "taskDescription": "Lumbridge & Draynor Medium: Catch a salmon in the River Lum"
                   },
                   "prerequisites": [
                     "1.3.2.1"
@@ -9117,7 +9154,8 @@
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1194,
-                    "bit": 25
+                    "bit": 25,
+                    "taskDescription": "Lumbridge & Draynor Hard: Cast Bones to Peaches in the Al Kharid palace"
                   },
                   "prerequisites": [
                     "1.3.2.3"
@@ -12746,7 +12784,7 @@
                       "2.1.17.1",
                       "2.1.18.5",
                       "2.1.24.8",
-                      "2.2.16.6",
+                      "2.2.16.8",
                       "2.2.20.1",
                       "2.2.24.7",
                       "2.2.24.9",
@@ -17448,11 +17486,11 @@
                     "location": "anywhere",
                     "itemId": 1440,
                     "servesSteps": [
-                      "2.2.4.6"
+                      "2.2.4.7"
                     ],
                     "consumedAt": [
                       {
-                        "stepId": "2.2.4.6",
+                        "stepId": "2.2.4.7",
                         "quantity": 1
                       }
                     ]
@@ -24947,13 +24985,13 @@
                 },
                 {
                   "id": "1.4.23.5",
-                  "instruction": "Buy a team cape from Richard in the Wilderness and equip it (Wilderness Easy diary)",
-                  "guidance": "Before you head into the Wilderness, make a waka canoe at the Edgeville canoe station for the Varrock Hard diary. Do not paddle it anywhere.",
+                  "instruction": "Make a waka canoe at the Edgeville canoe station for the Varrock Hard diary",
+                  "guidance": "Making the canoe completes the task, so leave it at the station without paddling anywhere.",
                   "completion": {
                     "type": "varpBitValue",
-                    "varpId": 1192,
-                    "bit": 12,
-                    "taskDescription": "Wilderness Easy: Equip a team cape"
+                    "varpId": 1176,
+                    "bit": 31,
+                    "taskDescription": "Varrock Hard: Make a waka canoe at Edgeville"
                   },
                   "prerequisites": [
                     "1.4.23.4"
@@ -25003,8 +25041,21 @@
                 },
                 {
                   "id": "1.4.23.6",
+                  "instruction": "Buy a team cape from Richard in the Wilderness and equip it (Wilderness Easy diary)",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1192,
+                    "bit": 12,
+                    "taskDescription": "Wilderness Easy: Equip a team cape"
+                  },
+                  "prerequisites": [
+                    "1.4.23.5"
+                  ]
+                },
+                {
+                  "id": "1.4.23.7",
                   "instruction": "Have the Mage of Zamorak send you to the Abyss and craft your essence at the earth rift (Varrock Easy diary)",
-                  "guidance": "The Mage of Zamorak is at the ruins in the low Wilderness north of Edgeville. He skulls you when he teleports you, so carry nothing you can't lose. Break through to the inner ring with your pickaxe or axe, enter the earth rift and use the altar. A single essence covers the diary; the rest is free Runecraft XP.",
+                  "guidance": "The Mage of Zamorak is at the ruins in the low Wilderness north of Edgeville. He skulls you when he teleports you, so carry nothing you can't lose. Break through to the inner ring with your pickaxe or axe, enter the earth rift and use the altar. A single essence completes the diary task; the rest is free Runecraft XP.",
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1176,
@@ -25012,7 +25063,7 @@
                     "taskDescription": "Varrock Easy: Craft an earth rune"
                   },
                   "prerequisites": [
-                    "1.4.23.5"
+                    "1.4.23.6"
                   ]
                 }
               ]
@@ -25071,7 +25122,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "1.4.23.6"
+                    "1.4.23.7"
                   ]
                 },
                 {
@@ -26165,13 +26216,13 @@
                         "location": "anywhere",
                         "itemId": 1765,
                         "servesSteps": [
-                          "2.1.44.13",
+                          "2.2.17.2",
                           "2.3.14.4",
                           "2.3.9.1"
                         ],
                         "consumedAt": [
                           {
-                            "stepId": "2.1.44.13",
+                            "stepId": "2.2.17.2",
                             "quantity": 1
                           },
                           {
@@ -26224,7 +26275,6 @@
                     ],
                     "mode": "all",
                     "servesSteps": [
-                      "2.1.44.13",
                       "2.3.14.11",
                       "2.3.14.4",
                       "2.3.9.1"
@@ -27135,7 +27185,7 @@
                     "type": "questComplete",
                     "questName": "Dwarf Cannon",
                     "servesSteps": [
-                      "2.2.22.4"
+                      "2.2.22.5"
                     ]
                   },
                   "prerequisites": [
@@ -28066,7 +28116,7 @@
                       "2.1.9.4",
                       "2.2.1.5",
                       "2.2.12.5",
-                      "2.2.18.7",
+                      "2.2.18.8",
                       "2.2.26.20",
                       "2.2.27.7",
                       "2.2.29.7",
@@ -29528,7 +29578,7 @@
                     "type": "questStarted",
                     "questName": "Between a Rock...",
                     "servesSteps": [
-                      "2.2.22.4"
+                      "2.2.22.5"
                     ]
                   },
                   "prerequisites": [
@@ -29982,7 +30032,7 @@
                     "questName": "Between a Rock...",
                     "minValue": 50,
                     "servesSteps": [
-                      "2.2.22.4"
+                      "2.2.22.5"
                     ]
                   },
                   "prerequisites": [
@@ -31815,7 +31865,7 @@
                         "location": "anywhere",
                         "itemId": 4579,
                         "servesSteps": [
-                          "2.2.22.4"
+                          "2.2.22.5"
                         ]
                       },
                       {
@@ -32763,7 +32813,7 @@
                     "questName": "Icthlarin's Little Helper",
                     "servesSteps": [
                       "2.2.11.4",
-                      "2.2.17.4",
+                      "2.2.17.5",
                       "2.2.21.5",
                       "3.1.7.10",
                       "3.2.2.2",
@@ -33146,7 +33196,7 @@
                     ],
                     "mode": "all",
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -33784,7 +33834,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 25,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -33813,7 +33863,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 30,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -33828,7 +33878,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 35,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -38111,7 +38161,7 @@
                     "skill": "Smithing",
                     "level": 50,
                     "servesSteps": [
-                      "2.2.22.4",
+                      "2.2.22.5",
                       "2.2.26.15",
                       "2.3.13.3"
                     ]
@@ -40090,7 +40140,7 @@
                         "location": "anywhere",
                         "itemId": 10167,
                         "servesSteps": [
-                          "2.2.17.1"
+                          "2.2.17.2"
                         ]
                       },
                       {
@@ -40134,7 +40184,7 @@
                             "location": "anywhere",
                             "itemId": 9690,
                             "servesSteps": [
-                              "2.2.4.7"
+                              "2.2.4.8"
                             ]
                           },
                           {
@@ -40144,7 +40194,7 @@
                             "location": "anywhere",
                             "itemId": 9694,
                             "servesSteps": [
-                              "2.2.4.8"
+                              "2.2.4.9"
                             ]
                           },
                           {
@@ -41017,7 +41067,7 @@
                         "type": "varpBitValue",
                         "varpId": 1184,
                         "bit": 26,
-                        "taskDescription": "Craft a Neitiznot shield on Neitiznot"
+                        "taskDescription": "Fremennik Hard: Craft a Neitiznot shield on Neitiznot"
                       }
                     ],
                     "mode": "all"
@@ -41284,12 +41334,12 @@
                     "location": "anywhere",
                     "itemId": 1939,
                     "servesSteps": [
-                      "2.2.17.1",
+                      "2.2.17.2",
                       "2.2.20.2"
                     ],
                     "consumedAt": [
                       {
-                        "stepId": "2.2.17.1",
+                        "stepId": "2.2.17.2",
                         "quantity": 1
                       },
                       {
@@ -41460,7 +41510,7 @@
                         "location": "inventory",
                         "itemId": 7936,
                         "servesSteps": [
-                          "2.2.4.6"
+                          "2.2.4.7"
                         ],
                         "consumedAt": [
                           {
@@ -41476,7 +41526,7 @@
                         "location": "inventory",
                         "itemId": 5521,
                         "servesSteps": [
-                          "2.2.4.6"
+                          "2.2.4.7"
                         ]
                       },
                       {
@@ -41486,7 +41536,7 @@
                         "location": "inventory",
                         "itemId": 1440,
                         "servesSteps": [
-                          "2.2.4.6"
+                          "2.2.4.7"
                         ]
                       },
                       {
@@ -41496,7 +41546,7 @@
                         "location": "inventory",
                         "itemId": 9690,
                         "servesSteps": [
-                          "2.2.4.7"
+                          "2.2.4.8"
                         ]
                       },
                       {
@@ -41506,7 +41556,7 @@
                         "location": "inventory",
                         "itemId": 9694,
                         "servesSteps": [
-                          "2.2.4.8"
+                          "2.2.4.9"
                         ]
                       },
                       {
@@ -41516,7 +41566,7 @@
                         "location": "inventory",
                         "itemId": 772,
                         "servesSteps": [
-                          "2.2.4.9"
+                          "2.2.4.10"
                         ]
                       }
                     ],
@@ -41604,8 +41654,7 @@
                 },
                 {
                   "id": "2.2.4.6",
-                  "instruction": "Craft the special fire rune at the Fire Altar and make your lava runes",
-                  "guidance": "Wear the binding necklace, then use earth runes on the altar with the earth talisman in your pack.",
+                  "instruction": "Craft the special fire rune at the Fire Altar",
                   "completion": {
                     "type": "hasItem",
                     "itemName": "Fire rune (The Slug Menace)",
@@ -41622,6 +41671,20 @@
                 },
                 {
                   "id": "2.2.4.7",
+                  "instruction": "Make lava runes at the Fire Altar for the Lumbridge & Draynor Medium diary",
+                  "guidance": "Wear the binding necklace, then use earth runes on the altar with the earth talisman in your pack.",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1194,
+                    "bit": 24,
+                    "taskDescription": "Lumbridge & Draynor Medium: Craft some lava runes at the Fire Altar"
+                  },
+                  "prerequisites": [
+                    "2.2.4.6"
+                  ]
+                },
+                {
+                  "id": "2.2.4.8",
                   "instruction": "Craft the special water rune at the Water Altar",
                   "completion": {
                     "type": "hasItem",
@@ -41634,11 +41697,11 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.4.6"
+                    "2.2.4.7"
                   ]
                 },
                 {
-                  "id": "2.2.4.8",
+                  "id": "2.2.4.9",
                   "instruction": "Craft the special earth rune at the Earth Altar",
                   "completion": {
                     "type": "hasItem",
@@ -41651,11 +41714,11 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.4.7"
+                    "2.2.4.8"
                   ]
                 },
                 {
-                  "id": "2.2.4.9",
+                  "id": "2.2.4.10",
                   "instruction": "Finish your lunar staff with the final dip at the Earth Altar",
                   "guidance": "The dramen staff must touch the Air, Fire, Water and Earth Altars in that order while Lunar Diplomacy is in progress; spare dramen staves can be turned into extra staves the same way.",
                   "completion": {
@@ -41666,7 +41729,7 @@
                     "itemId": 9084
                   },
                   "prerequisites": [
-                    "2.2.4.8"
+                    "2.2.4.9"
                   ]
                 }
               ]
@@ -41819,7 +41882,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.4.9"
+                    "2.2.4.10"
                   ],
                   "preSteps": [
                     {
@@ -42336,7 +42399,7 @@
                     "type": "questStarted",
                     "questName": "What Lies Below",
                     "servesSteps": [
-                      "2.2.16.6"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -42365,7 +42428,7 @@
                     ],
                     "mode": "any",
                     "servesSteps": [
-                      "2.2.16.6"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -42462,11 +42525,11 @@
                     "location": "anywhere",
                     "itemId": 424,
                     "servesSteps": [
-                      "2.2.16.8"
+                      "2.2.16.9"
                     ],
                     "consumedAt": [
                       {
-                        "stepId": "2.2.16.8",
+                        "stepId": "2.2.16.9",
                         "quantity": 5
                       }
                     ]
@@ -42718,7 +42781,7 @@
                     "questName": "What Lies Below",
                     "minValue": 20,
                     "servesSteps": [
-                      "2.2.16.6"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -42733,7 +42796,7 @@
                     "questName": "What Lies Below",
                     "minValue": 50,
                     "servesSteps": [
-                      "2.2.16.6"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -43494,7 +43557,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 40,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -43552,7 +43615,7 @@
                     ],
                     "mode": "any",
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -43762,11 +43825,43 @@
                     "type": "composite",
                     "conditions": [
                       {
-                        "type": "hasItem",
-                        "itemName": "Larupia fur",
-                        "quantity": 4,
-                        "location": "anywhere",
-                        "itemId": 10095,
+                        "type": "composite",
+                        "conditions": [
+                          {
+                            "type": "hasItem",
+                            "itemName": "Larupia fur",
+                            "quantity": 4,
+                            "location": "anywhere",
+                            "itemId": 10095,
+                            "servesSteps": [
+                              "2.2.12.4"
+                            ]
+                          },
+                          {
+                            "type": "hasItemTotal",
+                            "items": [
+                              {
+                                "itemName": "Small fur pouch",
+                                "itemId": 29299
+                              },
+                              {
+                                "itemName": "Small fur pouch",
+                                "itemId": 29466
+                              },
+                              {
+                                "itemName": "Medium fur pouch",
+                                "itemId": 29301
+                              },
+                              {
+                                "itemName": "Medium fur pouch (open)",
+                                "itemId": 29468
+                              }
+                            ],
+                            "quantity": 1,
+                            "location": "anywhere"
+                          }
+                        ],
+                        "mode": "any",
                         "servesSteps": [
                           "2.2.12.4"
                         ]
@@ -43944,7 +44039,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 50,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -43986,7 +44081,7 @@
                     ],
                     "mode": "all",
                     "servesSteps": [
-                      "2.2.17.4",
+                      "2.2.17.5",
                       "2.2.21.5"
                     ]
                   },
@@ -44246,7 +44341,7 @@
                     "questName": "A Tail of Two Cats",
                     "minValue": 60,
                     "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -44471,7 +44566,7 @@
                     ],
                     "mode": "any",
                     "servesSteps": [
-                      "2.2.22.4"
+                      "2.2.22.5"
                     ]
                   },
                   "prerequisites": [
@@ -44637,7 +44732,7 @@
                     "questName": "What Lies Below",
                     "minValue": 55,
                     "servesSteps": [
-                      "2.2.16.6"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -44646,15 +44741,14 @@
                 },
                 {
                   "id": "2.2.16.6",
-                  "instruction": "Complete What Lies Below in Varrock",
+                  "instruction": "Bring the charged wand to Surok Magis in the Varrock Palace library for What Lies Below",
                   "guidance": "Surok wants an empty bowl along with the charged wand, so bring one.",
                   "completion": {
-                    "type": "questComplete",
+                    "type": "questProgress",
                     "questName": "What Lies Below",
+                    "minValue": 60,
                     "servesSteps": [
-                      "2.2.38.6",
-                      "2.2.38.8",
-                      "3.1.7.10"
+                      "2.2.16.8"
                     ]
                   },
                   "prerequisites": [
@@ -44663,8 +44757,8 @@
                 },
                 {
                   "id": "2.2.16.7",
-                  "instruction": "Take the Dagon'hai history from the Varrock Palace library and keep it for 5 kudos at the Varrock Museum",
-                  "guidance": "The book is in the second bookcase from the east end of the palace library. Historian Minas, upstairs in the museum, gives the kudos for it whenever you next pass.",
+                  "instruction": "While in the palace library, take the Dagon'hai history and keep it for 5 kudos at the Varrock Museum",
+                  "guidance": "The book is in the second bookcase from the east end of the library. Historian Minas, upstairs in the museum, gives the kudos for it once What Lies Below is complete, whenever you next pass.",
                   "completion": {
                     "type": "composite",
                     "conditions": [
@@ -44691,6 +44785,22 @@
                 },
                 {
                   "id": "2.2.16.8",
+                  "instruction": "Complete What Lies Below with Rat Burgiss, Zaff and Surok",
+                  "completion": {
+                    "type": "questComplete",
+                    "questName": "What Lies Below",
+                    "servesSteps": [
+                      "2.2.38.6",
+                      "2.2.38.8",
+                      "3.1.7.10"
+                    ]
+                  },
+                  "prerequisites": [
+                    "2.2.16.7"
+                  ]
+                },
+                {
+                  "id": "2.2.16.9",
                   "instruction": "Continue One Small Favour with the Apothecary and Horvik in Varrock",
                   "guidance": "Reclaim the herbal tincture from the Apothecary rather than bringing your own. Horvik asks for the five pigeon cages on the second conversation.",
                   "completion": {
@@ -44702,7 +44812,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.16.7"
+                    "2.2.16.8"
                   ]
                 }
               ]
@@ -44733,6 +44843,111 @@
               "steps": [
                 {
                   "id": "2.2.17.1",
+                  "instruction": "Withdraw ten eagle feathers, a swamp tar, a yellow dye, the catspeak amulet(e), the penguin suit and the spicy stew, plus two dashing kebbit furs if you caught them",
+                  "completion": {
+                    "type": "composite",
+                    "conditions": [
+                      {
+                        "type": "hasItem",
+                        "itemName": "Eagle feather",
+                        "quantity": 10,
+                        "location": "inventory",
+                        "itemId": 10167,
+                        "servesSteps": [
+                          "2.2.17.2"
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Swamp tar",
+                        "quantity": 1,
+                        "location": "inventory",
+                        "itemId": 1939,
+                        "servesSteps": [
+                          "2.2.17.2"
+                        ],
+                        "consumedAt": [
+                          {
+                            "stepId": "2.2.17.2",
+                            "quantity": 1
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Yellow dye",
+                        "quantity": 1,
+                        "location": "inventory",
+                        "itemId": 1765,
+                        "servesSteps": [
+                          "2.2.17.2"
+                        ],
+                        "consumedAt": [
+                          {
+                            "stepId": "2.2.17.2",
+                            "quantity": 1
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Dashing kebbit fur",
+                        "quantity": 2,
+                        "location": "inventory",
+                        "itemId": 10127,
+                        "servesSteps": [
+                          "2.2.17.3",
+                          "2.2.30.11"
+                        ],
+                        "optional": true
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Catspeak amulet(e)",
+                        "quantity": 1,
+                        "location": "inventory",
+                        "itemId": 6544,
+                        "servesSteps": [
+                          "2.2.17.4"
+                        ]
+                      },
+                      {
+                        "type": "hasItemTotal",
+                        "items": [
+                          {
+                            "itemName": "Clockwork suit",
+                            "itemId": 10595
+                          },
+                          {
+                            "itemName": "Clockwork suit",
+                            "itemId": 10596
+                          }
+                        ],
+                        "quantity": 1,
+                        "location": "inventory",
+                        "servesSteps": [
+                          "2.2.18.1"
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Spicy stew",
+                        "quantity": 1,
+                        "location": "inventory",
+                        "itemId": 7479,
+                        "servesSteps": [
+                          "2.2.18.2"
+                        ]
+                      }
+                    ],
+                    "mode": "all"
+                  },
+                  "prerequisites": [
+                    "2.2.16.9"
+                  ]
+                },
+                {
+                  "id": "2.2.17.2",
                   "instruction": "Have Asyff make two eagle disguises at the Fancy Clothes Store in south-east Varrock",
                   "guidance": "Ask Asyff about a couple of bird costumes. He makes both at once for 50 gp.",
                   "completion": {
@@ -44753,81 +44968,11 @@
                     "mode": "any"
                   },
                   "prerequisites": [
-                    "2.2.16.8"
-                  ],
-                  "preSteps": [
-                    {
-                      "instruction": "Withdraw ten eagle feathers, a swamp tar, a yellow dye and coins, plus two dashing kebbit furs if you caught them",
-                      "completion": {
-                        "type": "composite",
-                        "conditions": [
-                          {
-                            "type": "hasItem",
-                            "itemName": "Eagle feather",
-                            "quantity": 10,
-                            "location": "inventory",
-                            "itemId": 10167
-                          },
-                          {
-                            "type": "hasItem",
-                            "itemName": "Swamp tar",
-                            "quantity": 1,
-                            "location": "inventory",
-                            "itemId": 1939
-                          },
-                          {
-                            "type": "hasItem",
-                            "itemName": "Yellow dye",
-                            "quantity": 1,
-                            "location": "inventory",
-                            "itemId": 1765
-                          }
-                        ],
-                        "mode": "all"
-                      }
-                    },
-                    {
-                      "instruction": "Bring the catspeak amulet(e), the penguin suit, the spicy stew and runes for Lumbridge Teleport too",
-                      "completion": {
-                        "type": "composite",
-                        "conditions": [
-                          {
-                            "type": "hasItem",
-                            "itemName": "Catspeak amulet(e)",
-                            "quantity": 1,
-                            "location": "inventory",
-                            "itemId": 6544
-                          },
-                          {
-                            "type": "hasItemTotal",
-                            "items": [
-                              {
-                                "itemName": "Clockwork suit",
-                                "itemId": 10595
-                              },
-                              {
-                                "itemName": "Clockwork suit",
-                                "itemId": 10596
-                              }
-                            ],
-                            "quantity": 1,
-                            "location": "inventory"
-                          },
-                          {
-                            "type": "hasItem",
-                            "itemName": "Spicy stew",
-                            "quantity": 1,
-                            "location": "inventory",
-                            "itemId": 7479
-                          }
-                        ],
-                        "mode": "all"
-                      }
-                    }
+                    "2.2.17.1"
                   ]
                 },
                 {
-                  "id": "2.2.17.2",
+                  "id": "2.2.17.3",
                   "instruction": "Optional: trade two dashing kebbit furs and 800 gp to Asyff for a spottier cape, then wear it for the Varrock Hard diary",
                   "guidance": "Wearing the spottier cape needs 66 Hunter. Skip this if you have no furs.",
                   "completion": {
@@ -44848,22 +44993,7 @@
                     ],
                     "mode": "any",
                     "servesSteps": [
-                      "2.2.17.4"
-                    ]
-                  },
-                  "prerequisites": [
-                    "2.2.17.1"
-                  ]
-                },
-                {
-                  "id": "2.2.17.3",
-                  "instruction": "World hop at the Varrock west bank anvils until you find Bob, then talk to him for A Tail of Two Cats",
-                  "completion": {
-                    "type": "questProgress",
-                    "questName": "A Tail of Two Cats",
-                    "minValue": 65,
-                    "servesSteps": [
-                      "2.2.17.4"
+                      "2.2.17.5"
                     ]
                   },
                   "prerequisites": [
@@ -44872,6 +45002,21 @@
                 },
                 {
                   "id": "2.2.17.4",
+                  "instruction": "World hop at the Varrock west bank anvils until you find Bob, then talk to him for A Tail of Two Cats",
+                  "completion": {
+                    "type": "questProgress",
+                    "questName": "A Tail of Two Cats",
+                    "minValue": 65,
+                    "servesSteps": [
+                      "2.2.17.5"
+                    ]
+                  },
+                  "prerequisites": [
+                    "2.2.17.3"
+                  ]
+                },
+                {
+                  "id": "2.2.17.5",
                   "instruction": "Talk to Unferth in north-east Burthorpe to complete A Tail of Two Cats",
                   "guidance": "Put both reward lamps on Slayer. From here on, lamps go on Slayer until level 58 for cave horrors, then back on Herblore.",
                   "completion": {
@@ -44883,7 +45028,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.17.3"
+                    "2.2.17.4"
                   ],
                   "preSteps": [
                     {
@@ -44938,7 +45083,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.17.4"
+                    "2.2.17.5"
                   ],
                   "preSteps": [
                     {
@@ -45042,6 +45187,81 @@
                   "prerequisites": [
                     "2.2.18.6"
                   ]
+                },
+                {
+                  "id": "2.2.18.8",
+                  "instruction": "Buy a bucket of milk, an egg, a pot of flour and a cake tin from the same chest for Recipe for Disaster - Lumbridge Guide, unless you have them banked",
+                  "completion": {
+                    "type": "composite",
+                    "conditions": [
+                      {
+                        "type": "hasItem",
+                        "itemName": "Bucket of milk",
+                        "quantity": 1,
+                        "location": "anywhere",
+                        "itemId": 1927,
+                        "servesSteps": [
+                          "2.2.19.3"
+                        ],
+                        "consumedAt": [
+                          {
+                            "stepId": "2.2.19.3",
+                            "quantity": 1
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Egg",
+                        "quantity": 1,
+                        "location": "anywhere",
+                        "itemId": 1944,
+                        "servesSteps": [
+                          "2.2.19.3"
+                        ],
+                        "consumedAt": [
+                          {
+                            "stepId": "2.2.19.3",
+                            "quantity": 1
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Pot of flour",
+                        "quantity": 1,
+                        "location": "anywhere",
+                        "itemId": 1933,
+                        "servesSteps": [
+                          "2.2.19.3"
+                        ],
+                        "consumedAt": [
+                          {
+                            "stepId": "2.2.19.3",
+                            "quantity": 1
+                          }
+                        ]
+                      },
+                      {
+                        "type": "hasItem",
+                        "itemName": "Cake tin",
+                        "quantity": 1,
+                        "location": "anywhere",
+                        "itemId": 1887,
+                        "servesSteps": [
+                          "2.2.26.19"
+                        ],
+                        "itemClass": "cake_tin"
+                      }
+                    ],
+                    "mode": "all",
+                    "servesSteps": [
+                      "2.2.26.19"
+                    ]
+                  },
+                  "prerequisites": [
+                    "2.2.18.7"
+                  ]
                 }
               ]
             },
@@ -45106,7 +45326,7 @@
                     ]
                   },
                   "prerequisites": [
-                    "2.2.18.7"
+                    "2.2.18.8"
                   ]
                 },
                 {
@@ -45469,7 +45689,7 @@
                     "type": "varpBitValue",
                     "varpId": 1198,
                     "bit": 3,
-                    "taskDescription": "Use the rope on the entrance and enter the Kalphite Hive"
+                    "taskDescription": "Desert Easy: Use a rope on the entrance and enter the Kalphite Hive"
                   },
                   "prerequisites": [
                     "2.2.20.3"
@@ -45647,14 +45867,28 @@
                 },
                 {
                   "id": "2.2.22.4",
-                  "instruction": "Return to Dondakan and finish Between a Rock...",
-                  "guidance": "Wear the gold helmet and bring a pickaxe. Inside, mine at least 6 gold ore before talking to the flames, or the Arzinian Being keeps healing; 15 ore drops it from level 125 to 75. Keep the ore in your inventory and finish within 8 minutes. Cast High Level Alchemy on the rune pickaxe he pays out.",
+                  "instruction": "Have Dondakan fire you into the Arzinian Mine and mine gold ore",
+                  "guidance": "Wear the gold helmet and bring a pickaxe. You have 8 minutes to mine and defeat the Arzinian Being. Mine at least 6 gold ore, or it keeps healing; 15 ore drops it from level 125 to 75. Keep the ore in your inventory.",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1184,
+                    "bit": 20,
+                    "taskDescription": "Fremennik Medium: Mine some gold at the Arzinian Mine"
+                  },
+                  "prerequisites": [
+                    "2.2.22.3"
+                  ]
+                },
+                {
+                  "id": "2.2.22.5",
+                  "instruction": "Talk to the flames, defeat the Arzinian Being and finish Between a Rock...",
+                  "guidance": "Cast High Level Alchemy on the rune pickaxe Dondakan pays out.",
                   "completion": {
                     "type": "questComplete",
                     "questName": "Between a Rock..."
                   },
                   "prerequisites": [
-                    "2.2.22.3"
+                    "2.2.22.4"
                   ]
                 }
               ]
@@ -45731,7 +45965,7 @@
                     "mode": "all"
                   },
                   "prerequisites": [
-                    "2.2.22.4"
+                    "2.2.22.5"
                   ]
                 },
                 {
@@ -47742,6 +47976,26 @@
                 },
                 {
                   "id": "2.2.30.12",
+                  "instruction": "Have the Varrock estate agent redecorate your house in fancy stone",
+                  "guidance": "It costs 25,000 gp. Finish the dialogue, or the diary task does not count.",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1177,
+                    "bit": 3,
+                    "taskDescription": "Varrock Hard: Have the Varrock estate agent decorate your house with fancy stone"
+                  },
+                  "prerequisites": [
+                    "2.2.30.10"
+                  ],
+                  "background": true,
+                  "activation": {
+                    "type": "questComplete",
+                    "quest_name": "Curse of the Empty Lord"
+                  },
+                  "when": "Next Varrock Museum visit"
+                },
+                {
+                  "id": "2.2.30.13",
                   "instruction": "Collect the Varrock Hard diary reward; put the lamp on Herblore",
                   "guidance": "Toby hands out the reward just south-east of the centre of Varrock.",
                   "completion": {
@@ -47750,7 +48004,10 @@
                     "tier": "Hard"
                   },
                   "prerequisites": [
-                    "2.2.30.11"
+                    "1.4.23.5",
+                    "2.2.30.10",
+                    "2.2.30.11",
+                    "2.2.30.12"
                   ],
                   "background": true,
                   "activation": {
@@ -48375,15 +48632,32 @@
                   "when": "Ongoing"
                 },
                 {
+                  "id": "2.2.32.19",
+                  "instruction": "Kill a brine rat in the Brine Rat Cavern for the Fremennik Medium diary",
+                  "guidance": "Take fairy ring DKS and dig with a spade south of the windswept tree, east of Olaf Hradson. Roll back the boulder in the south-west of the cavern to leave.",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1184,
+                    "bit": 11,
+                    "taskDescription": "Fremennik Medium: Slay a brine rat"
+                  },
+                  "prerequisites": [
+                    "2.2.32.17"
+                  ],
+                  "background": true,
+                  "when": "At your convenience"
+                },
+                {
                   "id": "2.2.32.20",
-                  "instruction": "Kill a brine rat for the Fremennik Medium diary, then claim the reward; put the lamp on Herblore",
+                  "instruction": "Claim the Fremennik Medium diary reward from Thorodin south of Rellekka; put the lamp on Herblore",
                   "completion": {
                     "type": "diaryReward",
                     "area": "Fremennik",
                     "tier": "Medium"
                   },
                   "prerequisites": [
-                    "2.2.32.17"
+                    "2.2.32.17",
+                    "2.2.32.19"
                   ],
                   "background": true,
                   "when": "At your convenience"
@@ -49066,6 +49340,12 @@
                         "varbitId": 20227,
                         "minValue": 1,
                         "taskDescription": "Learn the ballistic attractor schematic"
+                      },
+                      {
+                        "type": "varpBitValue",
+                        "varpId": 1194,
+                        "bit": 15,
+                        "taskDescription": "Lumbridge & Draynor Medium: Purchase an upgraded device from Ava"
                       }
                     ],
                     "mode": "all"
@@ -49575,7 +49855,10 @@
                         "location": "anywhere",
                         "itemId": 9419,
                         "servesSteps": [
-                          "2.2.38.13",
+                          "2.2.38.10",
+                          "2.2.38.12",
+                          "2.2.38.14",
+                          "2.2.38.17",
                           "2.2.38.8"
                         ]
                       }
@@ -49707,11 +49990,13 @@
                 },
                 {
                   "id": "2.2.38.10",
-                  "instruction": "Complete the Ardougne Medium diary and collect its reward",
+                  "instruction": "Grapple up Yanille's south wall and jump off the other side for the Ardougne Medium diary",
+                  "guidance": "Equip a crossbow and mithril grapple first.",
                   "completion": {
-                    "type": "diaryReward",
-                    "area": "Ardougne",
-                    "tier": "Medium"
+                    "type": "varpBitValue",
+                    "varpId": 1196,
+                    "bit": 14,
+                    "taskDescription": "Ardougne Medium: Grapple over Yanille's south wall"
                   },
                   "prerequisites": [
                     "2.2.38.9"
@@ -49719,10 +50004,10 @@
                 },
                 {
                   "id": "2.2.38.11",
-                  "instruction": "Complete the Kandarin Medium diary and collect its reward",
+                  "instruction": "Complete the Ardougne Medium diary and collect its reward",
                   "completion": {
                     "type": "diaryReward",
-                    "area": "Kandarin",
+                    "area": "Ardougne",
                     "tier": "Medium"
                   },
                   "prerequisites": [
@@ -49731,11 +50016,13 @@
                 },
                 {
                   "id": "2.2.38.12",
-                  "instruction": "Complete the Lumbridge & Draynor Medium diary and collect its reward",
+                  "instruction": "Grapple from the Water Obelisk island to the Catherby shore for the Kandarin Medium diary",
+                  "guidance": "Reach the island by the ladder beside the black dragons in Taverley Dungeon, taking the 70 Agility pipe past the dusty key door. Carry an anti-dragon shield.",
                   "completion": {
-                    "type": "diaryReward",
-                    "area": "Lumbridge & Draynor",
-                    "tier": "Medium"
+                    "type": "varpBitValue",
+                    "varpId": 1178,
+                    "bit": 15,
+                    "taskDescription": "Kandarin Medium: Grapple from the Water Obelisk island to Catherby shore"
                   },
                   "prerequisites": [
                     "2.2.38.11"
@@ -49743,8 +50030,60 @@
                 },
                 {
                   "id": "2.2.38.13",
+                  "instruction": "Complete the Kandarin Medium diary and collect its reward",
+                  "completion": {
+                    "type": "diaryReward",
+                    "area": "Kandarin",
+                    "tier": "Medium"
+                  },
+                  "prerequisites": [
+                    "2.2.38.12"
+                  ]
+                },
+                {
+                  "id": "2.2.38.14",
+                  "instruction": "Grapple across the River Lum at the broken raft for the Lumbridge & Draynor Medium diary",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1194,
+                    "bit": 14,
+                    "taskDescription": "Lumbridge & Draynor Medium: Grapple across the River Lum"
+                  },
+                  "prerequisites": [
+                    "2.2.38.13"
+                  ]
+                },
+                {
+                  "id": "2.2.38.15",
+                  "instruction": "Get a Slayer task from Chaeldar in Zanaris for the Lumbridge & Draynor Medium diary",
+                  "guidance": "Chaeldar needs 70 Combat. Enter Zanaris through the Lumbridge Swamp shed or any fairy ring.",
+                  "completion": {
+                    "type": "varpBitValue",
+                    "varpId": 1194,
+                    "bit": 22,
+                    "taskDescription": "Lumbridge & Draynor Medium: Get a Slayer task from Chaeldar"
+                  },
+                  "prerequisites": [
+                    "2.2.38.14"
+                  ]
+                },
+                {
+                  "id": "2.2.38.16",
+                  "instruction": "Complete the Lumbridge & Draynor Medium diary and collect its reward",
+                  "completion": {
+                    "type": "diaryReward",
+                    "area": "Lumbridge & Draynor",
+                    "tier": "Medium"
+                  },
+                  "prerequisites": [
+                    "2.2.4.7",
+                    "2.2.34.8",
+                    "2.2.38.15"
+                  ]
+                },
+                {
+                  "id": "2.2.38.17",
                   "instruction": "Do the grapple task for the Falador Medium diary",
-                  "guidance": "Equip a crossbow and mithril grapple first.",
                   "completion": {
                     "type": "varpBitValue",
                     "varpId": 1186,
@@ -49752,7 +50091,7 @@
                     "taskDescription": "Falador Medium: Grapple up and jump off the north Falador wall"
                   },
                   "prerequisites": [
-                    "2.2.38.12"
+                    "2.2.38.16"
                   ]
                 }
               ]
@@ -49864,7 +50203,7 @@
                     "mode": "any"
                   },
                   "prerequisites": [
-                    "2.2.38.13"
+                    "2.2.38.17"
                   ],
                   "kingdomHardwood": [
                     "teak",
@@ -54287,7 +54626,7 @@
                     "type": "varpBitValue",
                     "varpId": 1198,
                     "bit": 27,
-                    "taskDescription": "Kill the Kalphite Queen"
+                    "taskDescription": "Desert Hard: Kill the Kalphite Queen"
                   },
                   "prerequisites": [
                     "3.1.7.2"
@@ -54567,7 +54906,7 @@
                         "type": "varpBitValue",
                         "varpId": 1182,
                         "bit": 27,
-                        "taskDescription": "Complete a veteran game of Pest Control"
+                        "taskDescription": "Western Provinces Hard: Complete a veteran game of Pest Control"
                       },
                       {
                         "type": "composite",

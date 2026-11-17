@@ -45,7 +45,7 @@
       "skill": "Herblore"
     },
     {
-      "fromStep": "2.2.17.4",
+      "fromStep": "2.2.17.5",
       "itemIds": [
         13147
       ],
@@ -71,7 +71,7 @@
       ],
       "note": "BRUHsailer: put the Fremennik Medium diary lamp on Herblore",
       "skill": "Herblore",
-      "untilStep": "2.2.38.10"
+      "untilStep": "2.2.38.11"
     },
     {
       "itemIds": [
@@ -124,7 +124,7 @@
     },
     {
       "fallback": "Herblore",
-      "fromStep": "2.2.17.4",
+      "fromStep": "2.2.17.5",
       "note": "BRUHsailer: put lamps on Slayer until 58 for cave horrors, then on Herblore again",
       "skill": "Slayer",
       "then": "Herblore",

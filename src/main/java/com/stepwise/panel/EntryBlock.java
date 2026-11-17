@@ -71,12 +71,16 @@ class EntryBlock extends JPanel
 	private final JLabel duration = PanelSections.smallLabel(" ", COLOR_DURATION);
 	private final JLabel textChip;
 	private final JLabel itemsChip;
-	/** One chip holding an indicator each for GP, skills and quests against the guide. */
+	/**
+	 * One chip holding an indicator each for GP, skills, quests and diary tasks against the
+	 * guide.
+	 */
 	private final JPanel routeChip;
 	private final JLabel gpPart;
 	private final JLabel skillsPart;
 	private final JLabel questsPart;
-	/** The three indicators in chip order. */
+	private final JLabel diaryPart;
+	/** The indicators in chip order. */
 	private final JLabel[] routeParts;
 	private final JPanel chipRow;
 	private final JPanel routeRow;
@@ -121,13 +125,15 @@ class EntryBlock extends JPanel
 		gpPart = routePart();
 		skillsPart = routePart();
 		questsPart = routePart();
-		routeParts = new JLabel[]{gpPart, skillsPart, questsPart};
+		diaryPart = routePart();
+		routeParts = new JLabel[]{gpPart, skillsPart, questsPart, diaryPart};
 		routeChip = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		routeChip.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		routeChip.addMouseListener(PanelSections.clicks(() -> toggle(Open.ROUTE)));
 		routeChip.add(gpPart);
 		routeChip.add(skillsPart);
 		routeChip.add(questsPart);
+		routeChip.add(diaryPart);
 		routeChip.setVisible(false);
 		style(routeChip, false);
 		chipRow = PanelSections.chipRow();
@@ -222,9 +228,9 @@ class EntryBlock extends JPanel
 	}
 
 	/**
-	 * One indicator each for GP, skills and quests, shown only once it has a reading. Every
-	 * write below is guarded or a no-op on an unchanged value, because this runs on every
-	 * refresh.
+	 * One indicator each for GP, skills, quests and diary tasks, shown only once it has a
+	 * reading. Every write below is guarded or a no-op on an unchanged value, because this
+	 * runs on every refresh.
 	 */
 	private void updateRouteChip()
 	{
@@ -246,6 +252,12 @@ class EntryBlock extends JPanel
 		setPart(questsPart, quests, route.questIcon(CHIP_ICON_SIZE), "Quests",
 			countText(questsDelta), RouteDeficitPanel.toneOf(questsDelta),
 			countsTooltip("quest", "quests", route.questsBehind(), route.questsAhead()));
+
+		// Shown only when something is owed: a diary task done early is not tracked as ahead.
+		int diaryBehind = route.diaryTasksBehind();
+		setPart(diaryPart, diaryBehind > 0, route.diaryIcon(CHIP_ICON_SIZE), "Diary",
+			countText(-diaryBehind), RouteDeficitPanel.toneOf(-diaryBehind),
+			countsTooltip("diary task", "diary tasks", diaryBehind, 0));
 
 		// The first indicator shown sits on the chip's own padding; the others keep apart.
 		boolean first = true;

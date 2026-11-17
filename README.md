@@ -36,13 +36,14 @@ The guide's item list for your stretch appears as an inventory grid.
 
 ## Route check
 
-Click the GP, skills and quests chip under the entry title to compare your account with the
-route.
+Click the GP, skills, quests and diary chip under the entry title to compare your account with
+the route.
 
 <img src="images/route.png" width="260" alt="Skills, GP and quests compared with the route">
 
 - Every skill and your GP against the levels and money the guide expects at this entry.
 - The quests the guide has you finish before here that you have not.
+- The achievement diary tasks the guide has you do before here that you have not.
 
 ## Timers
 

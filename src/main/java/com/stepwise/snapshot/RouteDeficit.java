@@ -59,10 +59,28 @@ public class RouteDeficit {
      */
     boolean questsKnown;
 
-    /** A deficit without the quest comparison, whose quest list is unread. */
+    /**
+     * Achievement diary tasks a step before the active step requires and the player has not
+     * done, in guide order. A step reached through a milestone or marked done by hand can sit
+     * behind the player with its task undone, and the tier's reward then cannot be claimed.
+     * A task whose var has not been read yet is left out rather than reported as undone.
+     */
+    List<DiaryTaskBehind> diaryTasksBehind;
+
+    /** A deficit without the quest or diary comparison, whose quest list is unread. */
     public RouteDeficit(String entryId, boolean gpKnown, long playerGp, long routeGp,
                         List<SkillDelta> skills, SkipAdvice skipAdvice) {
-        this(entryId, gpKnown, playerGp, routeGp, skills, skipAdvice, List.of(), 0, false);
+        this(entryId, gpKnown, playerGp, routeGp, skills, skipAdvice, List.of(), 0, false,
+                List.of());
+    }
+
+    /** A diary task a step behind the active step requires, which the player has not done. */
+    @Value
+    public static class DiaryTaskBehind {
+        /** The task as the step names it, e.g. "Varrock Hard: Make a waka canoe at Edgeville". */
+        String task;
+        /** The first step that requires it. */
+        String stepId;
     }
 
     /** A quest the guide has already finished by the active step, and the player has not. */

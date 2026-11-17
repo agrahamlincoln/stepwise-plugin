@@ -1164,11 +1164,17 @@ public class CoreEngine {
      * the two by re-resolving after each latch iteration.
      */
     private boolean prerequisitesComplete(GuideStep step) {
+        return prerequisitesCompleteExcept(step, null);
+    }
+
+    /** As {@link #prerequisitesComplete}, but the {@code except} prerequisite need not be done. */
+    private boolean prerequisitesCompleteExcept(GuideStep step, StepId except) {
         if (step.getPrerequisites() == null || step.getPrerequisites().isEmpty()) {
             return true;
         }
         for (StepId prereq : step.getPrerequisites()) {
-            if (!completedSteps.contains(prereq) && !skippedSteps.contains(prereq)) {
+            if (!prereq.equals(except)
+                    && !completedSteps.contains(prereq) && !skippedSteps.contains(prereq)) {
                 return false;
             }
         }
@@ -1187,6 +1193,75 @@ public class CoreEngine {
             if (completedSteps.contains(served)) return true;
         }
         return false;
+    }
+
+    /**
+     * Whether the stock this step gathers has already gone into the steps it serves, read from
+     * those steps' own conditions. A consumer gated on this step trusts a met held-item reading
+     * only once this step is complete, and this step's served arm is waived only once that
+     * consumer has latched. A player who spent the stock before this step latched would wait
+     * here for good: once larupia furs are sewn into a fur pouch, the player holds the pouch
+     * and no furs are left to count.
+     *
+     * <p>The condition's own {@code servesSteps} are checked first. Under an {@code all}
+     * composite, every required arm that is not met must be covered by {@link #stockSpent};
+     * under an {@code any} composite, one covered arm is enough.
+     */
+    private boolean servedStockSpent(GuideStep step) {
+        CompletionCondition condition = step.getCompletion();
+        if (stockSpent(condition, step.getId())) {
+            return true;
+        }
+        if (!(condition instanceof CompletionCondition.Composite)) {
+            return false;
+        }
+        CompletionCondition.Composite composite = (CompletionCondition.Composite) condition;
+        boolean all = composite.getMode() == CompositeMode.ALL;
+        boolean anySpent = false;
+        for (CompletionCondition sub : composite.getConditions()) {
+            boolean spent = stockSpent(sub, step.getId());
+            if (!all && spent) {
+                return true;
+            }
+            if (all && !sub.isOptional() && !spent
+                    && !ResolutionEngine.evaluateCondition(sub, playerState, completedSteps)) {
+                return false;
+            }
+            anySpent |= spent;
+        }
+        return all && anySpent;
+    }
+
+    /**
+     * Whether every step this condition serves is done, or reads met with this condition's
+     * step as its only unfinished prerequisite. Every consumer must qualify: stock bought for
+     * two steps is not spent when the first of them is done (cosmic runes for both the earth
+     * orbs and the air orb).
+     */
+    private boolean stockSpent(CompletionCondition condition, StepId producer) {
+        List<StepId> serves = condition.getServesSteps();
+        if (serves.isEmpty() || ResolutionEngine.unmetProvesIncomplete(condition)) {
+            return false;
+        }
+        for (StepId served : serves) {
+            if (!completedSteps.contains(served) && !skippedSteps.contains(served)
+                    && !consumerMet(served, producer)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Whether a consumer reads met now and waits on no prerequisite but its producer. */
+    private boolean consumerMet(StepId consumerId, StepId producer) {
+        GuideStep consumer = stepIndex.get(consumerId);
+        if (consumer == null || suppressedSteps.contains(consumerId)) {
+            return false;
+        }
+        if (!prerequisitesCompleteExcept(consumer, producer)) {
+            return false;
+        }
+        return ResolutionEngine.evaluateCondition(consumer.getCompletion(), playerState, completedSteps);
     }
 
     /**
@@ -1294,6 +1369,9 @@ public class CoreEngine {
         // is complete (see frontierServesEdges). Looser than the closure check above, and safe
         // because it fires only at the frontier.
         if (wholeStepServedComplete(step)) {
+            return true;
+        }
+        if (servedStockSpent(step)) {
             return true;
         }
         if (isPureTravelStep(step) && anyDependentConditionMet(id)) {

@@ -1,5 +1,6 @@
 package com.stepwise.engine;
 
+import com.stepwise.diary.DiaryVarbits;
 import com.stepwise.guide.CompletionCondition;
 import com.stepwise.guide.CompositeMode;
 import com.stepwise.guide.GuideBudget;
@@ -93,8 +94,9 @@ public final class RouteDeficitBuilder {
     }
 
     /**
-     * {@link #build(GuideBudget, String, PlayerState)} plus the quest comparison. Without a
-     * ledger row for the entry, the comparison still carries the quests when any differ.
+     * {@link #build(GuideBudget, String, PlayerState)} plus the quest and diary comparisons.
+     * Without a ledger row for the entry, the comparison still carries the quests and diary
+     * tasks when any differ.
      *
      * @param activeIdx the active step's position in {@code guide.allSteps()}
      */
@@ -102,19 +104,21 @@ public final class RouteDeficitBuilder {
                                      StepwiseGuide guide, int activeIdx) {
         RouteDeficit deficit = build(budget, entryId, state);
         boolean questsKnown = guide != null && state != null && !state.getQuests().isEmpty();
-        if (!questsKnown) {
-            return deficit;
-        }
-        List<RouteDeficit.QuestBehind> behind = questsBehind(guide, activeIdx, state);
-        int ahead = questsAhead(guide, activeIdx, state);
+        List<RouteDeficit.QuestBehind> behind =
+                questsKnown ? questsBehind(guide, activeIdx, state) : List.of();
+        int ahead = questsKnown ? questsAhead(guide, activeIdx, state) : 0;
+        List<RouteDeficit.DiaryTaskBehind> diaries = diaryTasksBehind(guide, activeIdx, state);
         if (deficit == null) {
-            return entryId == null || (behind.isEmpty() && ahead == 0) ? null
+            return entryId == null || (behind.isEmpty() && ahead == 0 && diaries.isEmpty()) ? null
                     : new RouteDeficit(entryId, false, 0L, 0L, List.of(), null,
-                            behind, ahead, true);
+                            behind, ahead, questsKnown, diaries);
+        }
+        if (!questsKnown && diaries.isEmpty()) {
+            return deficit;
         }
         return new RouteDeficit(deficit.getEntryId(), deficit.isGpKnown(), deficit.getPlayerGp(),
                 deficit.getRouteGp(), deficit.getSkills(), deficit.getSkipAdvice(),
-                behind, ahead, true);
+                behind, ahead, questsKnown, diaries);
     }
 
     /**
@@ -126,7 +130,7 @@ public final class RouteDeficitBuilder {
             return 0;
         }
         int ahead = 0;
-        for (QuestFinish finish : questFinishes(guide)) {
+        for (QuestFinish finish : index(guide).finishes) {
             if (finish.stepIdx >= activeIdx
                     && state.getQuests().get(finish.questName) == QuestStatus.COMPLETED) {
                 ahead++;
@@ -144,39 +148,76 @@ public final class RouteDeficitBuilder {
         final String questName;
     }
 
-    /** The guide {@link #finishesCache} was built from, and the list; replaced together. */
+    /** A diary task's condition and the first step that requires it. */
     @AllArgsConstructor
-    private static final class FinishesCache {
+    private static final class DiaryRequirement {
+        final int stepIdx;
+        /** A {@code varpBitValue} or {@code varbitValue} naming the task. */
+        final CompletionCondition condition;
+        /** The completion varbit of the tier the task belongs to. */
+        final int tierVarbit;
+        /** The row reported while the task is undone; built once, as it depends on the guide alone. */
+        final RouteDeficit.DiaryTaskBehind row;
+    }
+
+    /** What the comparisons read from one guide, and the guide it was built from. */
+    @AllArgsConstructor
+    private static final class GuideIndex {
         final StepwiseGuide guide;
+        /** Each quest the guide finishes, once, at its first finishing step, in guide order. */
         final List<QuestFinish> finishes;
+        /**
+         * Each diary task a step requires, once per var it reads, at its first such step, in
+         * guide order.
+         */
+        final List<DiaryRequirement> diaries;
     }
 
     /**
-     * Every quest finish in a guide depends on the guide alone, and both comparisons run on
-     * every snapshot, so the walk over every step is done once per loaded guide.
+     * Both lists depend on the guide alone, and the comparisons run on every snapshot, so the
+     * walk over every step is done once per loaded guide.
      */
-    private static volatile FinishesCache finishesCache;
+    private static volatile GuideIndex guideIndex;
 
-    /** Each quest the guide finishes, once, at its first finishing step, in guide order. */
-    private static List<QuestFinish> questFinishes(StepwiseGuide guide) {
-        FinishesCache cache = finishesCache;
-        if (cache != null && cache.guide == guide) {
-            return cache.finishes;
+    private static GuideIndex index(StepwiseGuide guide) {
+        GuideIndex cached = guideIndex;
+        if (cached != null && cached.guide == guide) {
+            return cached;
         }
         List<GuideStep> steps = guide.allSteps();
-        Set<String> seen = new HashSet<>();
+        Set<String> questsSeen = new HashSet<>();
+        Set<String> varsSeen = new HashSet<>();
         List<QuestFinish> finishes = new ArrayList<>();
+        List<DiaryRequirement> diaries = new ArrayList<>();
+        List<CompletionCondition> leaves = new ArrayList<>();
         for (int i = 0; i < steps.size(); i++) {
-            for (String quest : questsFinishedBy(steps.get(i).getCompletion())) {
-                String name = ResolutionEngine.normalizeQuestName(quest);
-                if (seen.add(name)) {
-                    finishes.add(new QuestFinish(i, steps.get(i).getId().getValue(), name));
+            String stepId = steps.get(i).getId().getValue();
+            leaves.clear();
+            requiredLeaves(steps.get(i).getCompletion(), leaves);
+            for (CompletionCondition leaf : leaves) {
+                if (leaf instanceof CompletionCondition.QuestComplete) {
+                    String quest = ((CompletionCondition.QuestComplete) leaf).getQuestName();
+                    // The quest list is a ConcurrentHashMap, which throws on a null key.
+                    if (quest != null) {
+                        String name = ResolutionEngine.normalizeQuestName(quest);
+                        if (questsSeen.add(name)) {
+                            finishes.add(new QuestFinish(i, stepId, name));
+                        }
+                    }
+                    continue;
+                }
+                String task = diaryTaskOf(leaf);
+                Integer tierVarbit = tierVarbitOf(task);
+                if (tierVarbit != null && varsSeen.add(varKey(leaf))) {
+                    diaries.add(new DiaryRequirement(i, leaf, tierVarbit,
+                            new RouteDeficit.DiaryTaskBehind(task, stepId)));
                 }
             }
         }
-        List<QuestFinish> frozen = Collections.unmodifiableList(finishes);
-        finishesCache = new FinishesCache(guide, frozen);
-        return frozen;
+        GuideIndex built = new GuideIndex(guide, Collections.unmodifiableList(finishes),
+                Collections.unmodifiableList(diaries));
+        guideIndex = built;
+        return built;
     }
 
     /**
@@ -197,7 +238,7 @@ public final class RouteDeficitBuilder {
             return List.of();
         }
         List<RouteDeficit.QuestBehind> behind = new ArrayList<>();
-        for (QuestFinish finish : questFinishes(guide)) {
+        for (QuestFinish finish : index(guide).finishes) {
             if (finish.stepIdx >= activeIdx) {
                 break;
             }
@@ -212,29 +253,103 @@ public final class RouteDeficitBuilder {
     }
 
     /**
-     * The quests a condition requires finished: a bare {@code questComplete}, or one an
-     * {@code all} composite cannot latch without. An {@code any} arm can be met another way.
+     * Diary tasks that a step before {@code activeIdx} requires and the player has not done,
+     * in guide order, each named once at the first step that requires it.
+     *
+     * <p>Reads the diary vars, not step status, for the same reason {@link #questsBehind}
+     * reads the quest list. A var not read yet is left out rather than reported as undone,
+     * and so is every task of a tier the game already counts as finished.
      */
-    private static List<String> questsFinishedBy(CompletionCondition condition) {
-        if (condition instanceof CompletionCondition.QuestComplete) {
-            String name = ((CompletionCondition.QuestComplete) condition).getQuestName();
-            // The quest list is a ConcurrentHashMap, which throws on a null key.
-            return name != null ? List.of(name) : List.of();
+    static List<RouteDeficit.DiaryTaskBehind> diaryTasksBehind(StepwiseGuide guide,
+                                                               int activeIdx, PlayerState state) {
+        if (guide == null || state == null) {
+            return List.of();
         }
-        if (condition instanceof CompletionCondition.Composite) {
-            CompletionCondition.Composite composite = (CompletionCondition.Composite) condition;
-            if (composite.getMode() != CompositeMode.ALL) {
-                return List.of();
+        List<RouteDeficit.DiaryTaskBehind> behind = new ArrayList<>();
+        for (DiaryRequirement requirement : index(guide).diaries) {
+            if (requirement.stepIdx >= activeIdx) {
+                break;
             }
-            List<String> quests = new ArrayList<>();
-            for (CompletionCondition sub : composite.getConditions()) {
-                if (!sub.isOptional()) {
-                    quests.addAll(questsFinishedBy(sub));
-                }
+            // A tier the game already counts as finished owes no tasks.
+            Integer tierFlag = state.getVarbits().get(requirement.tierVarbit);
+            if (!varRead(requirement.condition, state)
+                    || ResolutionEngine.conditionMet(requirement.condition, state)
+                    || (tierFlag != null && tierFlag > 0)) {
+                continue;
             }
-            return quests;
+            behind.add(requirement.row);
         }
-        return List.of();
+        return Collections.unmodifiableList(behind);
+    }
+
+    /**
+     * The leaves a condition cannot latch without: the condition itself, or every required
+     * arm of an {@code all} composite, recursively. An {@code any} arm can be met another way.
+     */
+    private static void requiredLeaves(CompletionCondition condition,
+                                       List<CompletionCondition> out) {
+        if (!(condition instanceof CompletionCondition.Composite)) {
+            out.add(condition);
+            return;
+        }
+        CompletionCondition.Composite composite = (CompletionCondition.Composite) condition;
+        if (composite.getMode() != CompositeMode.ALL) {
+            return;
+        }
+        for (CompletionCondition sub : composite.getConditions()) {
+            if (!sub.isOptional()) {
+                requiredLeaves(sub, out);
+            }
+        }
+    }
+
+    /** The task a diary var condition names, or null for any other condition. */
+    private static String diaryTaskOf(CompletionCondition condition) {
+        if (condition instanceof CompletionCondition.VarpBitValue) {
+            return ((CompletionCondition.VarpBitValue) condition).getTaskDescription();
+        }
+        if (condition instanceof CompletionCondition.VarbitValue) {
+            return ((CompletionCondition.VarbitValue) condition).getTaskDescription();
+        }
+        return null;
+    }
+
+    /**
+     * The completion varbit of the diary tier a task label opens with ("Varrock Hard: ..."),
+     * or null when the label names no diary tier. The guide labels every diary task this way;
+     * other var conditions, such as a barcrawl signature, carry a label that names no tier.
+     */
+    static Integer tierVarbitOf(String task) {
+        int colon = task != null ? task.indexOf(':') : -1;
+        int space = colon > 0 ? task.lastIndexOf(' ', colon) : -1;
+        if (space <= 0) {
+            return null;
+        }
+        return DiaryVarbits.varbitFor(task.substring(0, space), task.substring(space + 1, colon));
+    }
+
+    /**
+     * Whether the var behind a diary condition has been read since login. This and
+     * {@link #varKey} see only conditions {@link #diaryTaskOf} named, which are always a
+     * {@code VarpBitValue} or a {@code VarbitValue}, so the cast after the {@code VarpBitValue} check is safe.
+     */
+    private static boolean varRead(CompletionCondition condition, PlayerState state) {
+        if (condition instanceof CompletionCondition.VarpBitValue) {
+            return state.getVarps().containsKey(
+                    ((CompletionCondition.VarpBitValue) condition).getVarpId());
+        }
+        return state.getVarbits().containsKey(
+                ((CompletionCondition.VarbitValue) condition).getVarbitId());
+    }
+
+    /** One key per var a diary condition reads, so a task repeated later is listed once. */
+    private static String varKey(CompletionCondition condition) {
+        if (condition instanceof CompletionCondition.VarpBitValue) {
+            CompletionCondition.VarpBitValue varp = (CompletionCondition.VarpBitValue) condition;
+            return "p" + varp.getVarpId() + ":" + varp.getBit();
+        }
+        CompletionCondition.VarbitValue varbit = (CompletionCondition.VarbitValue) condition;
+        return "b" + varbit.getVarbitId() + ">=" + varbit.getMinValue();
     }
 
     /** Skip advice for the earn arc opening at {@code idx}, or null when there is no arc. */

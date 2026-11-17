@@ -253,6 +253,17 @@ public class IconProvider
 	}
 
 	/**
+	 * The achievement diary tab's icon at a caller-chosen size, or null until
+	 * {@link #loadSprites} has fetched it.
+	 *
+	 * @param size width and height in pixels
+	 */
+	public ImageIcon getDiaryIcon(int size)
+	{
+		return resizedTab("diary", size);
+	}
+
+	/**
 	 * The stats tab's icon at a caller-chosen size, or null until {@link #loadSprites} has
 	 * fetched it.
 	 *
