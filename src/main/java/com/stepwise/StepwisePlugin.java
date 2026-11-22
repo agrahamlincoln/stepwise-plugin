@@ -125,8 +125,8 @@ import net.runelite.client.util.Text;
 
 @Slf4j
 @PluginDescriptor(
-	name = "Stepwise: BRUHsailer Guide",
-	description = "Iron guide, step by step. Follows the BRUHsailer Ironman guide by So Iron BRUH and ParasailerOSRS, checks steps off as you play, and finds your place on your first login.",
+	name = "Stepwise: Unofficial BRUHsailer Guide",
+	description = "Iron guide, step by step. An unofficial plugin for the BRUHsailer Ironman guide by So Iron BRUH and ParasailerOSRS. Checks steps off as you play and finds your place on your first login.",
 	tags = {"bruhsailer", "bruhsailor", "ironman", "guide", "efficiency", "route", "steps", "checklist",
 		"tracker", "progression", "quests"}
 )

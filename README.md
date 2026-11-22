@@ -1,10 +1,16 @@
-# Stepwise: BRUHsailer Guide
+# Stepwise: Unofficial BRUHsailer Guide
 
 **Iron guide, step by step.**
 
 Stepwise follows the BRUHsailer Ironman guide by So Iron BRUH and ParasailerOSRS. It checks
 steps off as the game shows you did them, finds your place in the route on your first login,
 and shows the route's timers in the same panel as your current step.
+
+> **Stepwise is unofficial.** The BRUHsailer guide's authors did not make this plugin and do
+> not maintain it. For the guide itself, read the
+> [original guide](https://docs.google.com/document/d/1CBkFM70SnrW4hJXvHM2F1fYCuBF_fRnEXnTYgRnRkAE).
+> Report problems with Stepwise [here](https://github.com/agrahamlincoln/stepwise-plugin/issues),
+> not to the guide's authors.
 
 <img src="images/panel.png" width="260" alt="Stepwise side panel on a mid-route account">
 
@@ -68,9 +74,10 @@ Progress saves to your RuneLite profile for each account.
 ## Credits
 
 - **The BRUHsailer Ironman guide** by So Iron BRUH and ParasailerOSRS
-  ([interactive guide](https://umkyzn.github.io/BRUHsailer/),
+  ([original guide](https://docs.google.com/document/d/1CBkFM70SnrW4hJXvHM2F1fYCuBF_fRnEXnTYgRnRkAE),
+  [interactive guide](https://umkyzn.github.io/BRUHsailer/),
   [wiki page](https://oldschool.runescape.wiki/w/Guide:BRUHsailer)). Stepwise follows their
-  route and shows their text for each entry.
+  route and shows their text for each entry. Stepwise is not an official BRUHsailer plugin.
 - **[Quest Helper](https://github.com/Zoinkwiz/quest-helper)** by Zoinkwiz and its
   contributors, for quest stage data and quest var ids.
 - **[RuneLite](https://github.com/runelite/runelite)**, whose Time Tracking plugin code
@@ -84,5 +91,5 @@ Progress saves to your RuneLite profile for each account.
 Licenses and full attributions: [NOTICE](NOTICE). Stepwise is BSD 2-Clause
 ([LICENSE](LICENSE)).
 
-Old School RuneScape and RuneScape are trademarks of Jagex Ltd. Stepwise: BRUHsailer Guide is
-not affiliated with or endorsed by Jagex.
+Old School RuneScape and RuneScape are trademarks of Jagex Ltd. Stepwise: Unofficial BRUHsailer
+Guide is not affiliated with or endorsed by Jagex.

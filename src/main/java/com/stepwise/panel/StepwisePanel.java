@@ -600,7 +600,7 @@ public class StepwisePanel extends PluginPanel
 		if (guide != null && guide.getVersion() != null)
 		{
 			String name = shortGuideName();
-			versionFooter.setText(name + ", " + versionText(guide.getVersion()));
+			versionFooter.setText("Unofficial " + name + ", " + versionText(guide.getVersion()));
 			versionFooter.setVisible(true);
 		}
 
@@ -829,8 +829,8 @@ public class StepwisePanel extends PluginPanel
 		panel.add(StepCardPanel.textArea("Welcome to Stepwise",
 			ColorScheme.BRAND_ORANGE, FontManager.getRunescapeBoldFont()));
 		panel.add(Box.createVerticalStrut(6));
-		panel.add(muted("Stepwise follows the BRUHsailer Ironman guide and checks steps off as "
-			+ "you complete them in game."));
+		panel.add(muted("Stepwise is an unofficial plugin for the BRUHsailer Ironman guide. It "
+			+ "checks steps off as you complete them in game."));
 		panel.add(Box.createVerticalStrut(12));
 		panel.add(StepCardPanel.textArea("Log in to start.",
 			Color.WHITE, FontManager.getRunescapeFont()));
@@ -861,8 +861,11 @@ public class StepwisePanel extends PluginPanel
 		}
 		panel.add(Box.createVerticalStrut(6));
 		panel.add(muted("Written by So Iron BRUH and ParasailerOSRS. Stepwise follows their route "
-			+ "and shows their text."));
+			+ "and shows their text, but it is unofficial: the guide's authors did not make it and "
+			+ "do not maintain it."));
 		panel.add(Box.createVerticalStrut(2));
+		panel.add(buildLink("Original guide",
+			"https://docs.google.com/document/d/1CBkFM70SnrW4hJXvHM2F1fYCuBF_fRnEXnTYgRnRkAE"));
 		panel.add(buildLink("Interactive guide", "https://umkyzn.github.io/BRUHsailer/"));
 		panel.add(buildLink("Wiki page", "https://oldschool.runescape.wiki/w/Guide:BRUHsailer"));
 	}
