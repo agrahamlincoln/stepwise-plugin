@@ -70,7 +70,7 @@
       "label": "Brimhaven and Port Sarim phase (mid 1.1)"
     },
     {
-      "anchor_step_id": "1.1.15.10",
+      "anchor_step_id": "1.1.15.12",
       "criteria": {
         "conditions": [
           {
@@ -106,29 +106,16 @@
       "label": "Mid-section quest cluster (before Great Kourend)"
     },
     {
-      "anchor_step_id": "1.1.18.3",
+      "anchor_step_id": "1.1.18.2",
       "criteria": {
         "conditions": [
           {
-            "level": 90,
-            "skill": "Firemaking",
-            "type": "skillLevel"
-          }
-        ],
-        "mode": "all",
-        "type": "composite"
-      },
-      "id": "wintertodt_phase_one",
-      "label": "First Wintertodt session to 90 Firemaking (late 1.1)"
-    },
-    {
-      "anchor_step_id": "1.1.18.3",
-      "criteria": {
-        "conditions": [
+            "questName": "The Ribbiting Tale of a Lily Pad Labour Dispute",
+            "type": "questComplete"
+          },
           {
-            "level": 99,
-            "skill": "Firemaking",
-            "type": "skillLevel"
+            "questName": "Children of the Sun",
+            "type": "questComplete"
           },
           {
             "questName": "Gertrude's Cat",
@@ -136,6 +123,14 @@
           },
           {
             "questName": "Daddy's Home",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Witch's Potion",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Tower of Life",
             "type": "questComplete"
           },
           {
@@ -173,7 +168,7 @@
           },
           {
             "questName": "Fishing Contest",
-            "type": "questComplete"
+            "type": "questStarted"
           },
           {
             "questName": "The Tourist Trap",
@@ -360,6 +355,45 @@
       "label": "Bird house runs unlocked (end of 1.3)"
     },
     {
+      "anchor_step_id": "1.4.9.44",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "The Fremennik Trials",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Lost City",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Bone Voyage",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Troll Stronghold",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fairytale I - Growing Pains",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Creature of Fenkenstrain",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Ascent of Arceuus",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "ascent_of_arceuus",
+      "label": "Troll Stronghold, Fairytale I and The Ascent of Arceuus (early 1.4)"
+    },
+    {
       "anchor_step_id": "1.4.15.17",
       "criteria": {
         "conditions": [
@@ -407,7 +441,7 @@
       "label": "Troll Country and Great Kourend quest cluster (early 1.4)"
     },
     {
-      "anchor_step_id": "1.4.28.15",
+      "anchor_step_id": "1.4.28.16",
       "criteria": {
         "conditions": [
           {
@@ -742,7 +776,7 @@
       "label": "Recipe for Disaster complete (late 2.2)"
     },
     {
-      "anchor_step_id": "2.2.32.17",
+      "anchor_step_id": "2.2.32.18",
       "criteria": {
         "conditions": [
           {
@@ -777,7 +811,7 @@
       "label": "Kourend and Varlamore quests (late 2.2)"
     },
     {
-      "anchor_step_id": "2.2.38.8",
+      "anchor_step_id": "2.2.38.16",
       "criteria": {
         "conditions": [
           {
@@ -896,9 +930,13 @@
       "label": "The Fremennik Exiles and post-Slayer quests (end of 3.1)"
     },
     {
-      "anchor_step_id": "3.2.2.4",
+      "anchor_step_id": "3.2.4.4",
       "criteria": {
         "conditions": [
+          {
+            "questName": "The Red Reef",
+            "type": "questComplete"
+          },
           {
             "questName": "While Guthix Sleeps",
             "type": "questComplete"
@@ -919,7 +957,7 @@
       "label": "While Guthix Sleeps, Dragon Slayer II and Monkey Madness II (early 3.2)"
     },
     {
-      "anchor_step_id": "3.2.3.7",
+      "anchor_step_id": "3.2.5.7",
       "criteria": {
         "conditions": [
           {
@@ -928,6 +966,10 @@
           },
           {
             "questName": "Monkey Madness II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Red Reef",
             "type": "questComplete"
           },
           {
@@ -958,7 +1000,7 @@
       "label": "Desert Treasure II - The Fallen Empire and endgame quest cluster (early 3.2)"
     },
     {
-      "anchor_step_id": "3.2.5.5",
+      "anchor_step_id": "3.2.7.5",
       "criteria": {
         "conditions": [
           {
@@ -971,6 +1013,10 @@
           },
           {
             "questName": "Desert Treasure II - The Fallen Empire",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Red Reef",
             "type": "questComplete"
           },
           {

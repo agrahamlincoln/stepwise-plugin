@@ -2,6 +2,48 @@
   "exceptions": [
     {
       "itemIds": [
+        34751
+      ],
+      "note": "Stepwise suggests Prayer. Hardcore ironmen may prefer Hitpoints for a bigger HP buffer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        34748
+      ],
+      "note": "BRUHsailer: put the Black Knights' Fortress lamps on Prayer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        34750
+      ],
+      "note": "BRUHsailer: put the Ernest the Chicken lamp on Slayer",
+      "skill": "Slayer"
+    },
+    {
+      "itemIds": [
+        34812
+      ],
+      "note": "BRUHsailer: put the A New Leaf lamp on Prayer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        34749
+      ],
+      "note": "BRUHsailer: put the Demon Slayer lamps on Prayer",
+      "skill": "Prayer"
+    },
+    {
+      "itemIds": [
+        34754
+      ],
+      "note": "BRUHsailer: put the Romeo & Juliet lamp on Slayer",
+      "skill": "Slayer"
+    },
+    {
+      "itemIds": [
         33117
       ],
       "note": "BRUHsailer: put the lamp from The Ides of Milk on Prayer",
@@ -71,7 +113,7 @@
       ],
       "note": "BRUHsailer: put the Fremennik Medium diary lamp on Herblore",
       "skill": "Herblore",
-      "untilStep": "2.2.38.11"
+      "untilStep": "2.2.38.8"
     },
     {
       "itemIds": [

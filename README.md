@@ -9,8 +9,9 @@ and shows the route's timers in the same panel as your current step.
 > **Stepwise is unofficial.** The BRUHsailer guide's authors did not make this plugin and do
 > not maintain it. For the guide itself, read the
 > [original guide](https://docs.google.com/document/d/1CBkFM70SnrW4hJXvHM2F1fYCuBF_fRnEXnTYgRnRkAE).
-> Report problems with Stepwise [here](https://github.com/agrahamlincoln/stepwise-plugin/issues),
-> not to the guide's authors.
+> Report problems with Stepwise on its
+> [GitHub issue tracker](https://github.com/agrahamlincoln/stepwise-plugin/issues), not to the
+> guide's authors.
 
 <img src="images/panel.png" width="260" alt="Stepwise side panel on a mid-route account">
 
