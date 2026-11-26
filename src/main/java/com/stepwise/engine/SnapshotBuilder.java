@@ -1054,6 +1054,20 @@ public final class SnapshotBuilder {
         return Collections.singletonList(new NextStep.IconHint(type, key));
     }
 
+    /**
+     * Splits a var condition's {@code type[:key]} icon hint. Null or {@code none} yields no icon;
+     * a malformed key reaches {@code IconProvider}, which draws nothing for it.
+     */
+    private static String[] varIconHint(String icon) {
+        if (icon == null || "none".equals(icon)) {
+            return new String[]{null, null};
+        }
+        int colon = icon.indexOf(':');
+        return colon < 0
+                ? new String[]{icon, null}
+                : new String[]{icon.substring(0, colon), icon.substring(colon + 1)};
+    }
+
     static String[] iconHintFor(CompletionCondition condition) {
         if (condition instanceof SkillLevel) {
             return new String[]{"skill", ((SkillLevel) condition).getSkill()};
@@ -1088,9 +1102,17 @@ public final class SnapshotBuilder {
                 || condition instanceof QuestProgress) {
             return new String[]{"quest", null};
         }
-        if (condition instanceof VarbitValue || condition instanceof VarpBitValue
-                || condition instanceof DiaryComplete || condition instanceof DiaryReward) {
+        if (condition instanceof DiaryComplete || condition instanceof DiaryReward) {
             return new String[]{"diary", null};
+        }
+        if (condition instanceof VarbitValue) {
+            return varIconHint(((VarbitValue) condition).getIcon());
+        }
+        if (condition instanceof VarpBitValue) {
+            return varIconHint(((VarpBitValue) condition).getIcon());
+        }
+        if (condition instanceof CompletionCondition.VarpValue) {
+            return varIconHint(((CompletionCondition.VarpValue) condition).getIcon());
         }
         if (condition instanceof GpThreshold) {
             return new String[]{"gp", String.valueOf(((GpThreshold) condition).getMinGp())};
@@ -1234,11 +1256,16 @@ public final class SnapshotBuilder {
         }
         if (condition instanceof QuestProgress) {
             QuestProgress c = (QuestProgress) condition;
+            if (c.getTaskDescription() != null) {
+                return c.getTaskDescription();
+            }
             String questName = ResolutionEngine.normalizeQuestName(c.getQuestName());
             if (questStageData != null) {
+                // Quest Helper describes each stage by the action taken while at it, so the
+                // stage before minValue names the action that reaches minValue.
                 int targetIdx = questStageData.getTargetStageIndex(questName, c.getMinValue());
-                if (targetIdx >= 0) {
-                    String desc = questStageData.getStageDescription(questName, targetIdx);
+                if (targetIdx > 0) {
+                    String desc = questStageData.getStageDescription(questName, targetIdx - 1);
                     if (desc != null) {
                         return c.getQuestName() + " — " + desc;
                     }

@@ -161,12 +161,6 @@ public class InProgressPanel extends JPanel
 		return ids;
 	}
 
-	/** Test seam: the cards built by the last structural rebuild, in list order. */
-	List<StepCardPanel> getCardsForTest()
-	{
-		return trackedCards;
-	}
-
 	/**
 	 * Occasion heading above a run of cards that share a {@code when}.
 	 *

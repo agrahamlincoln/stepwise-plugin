@@ -55,13 +55,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
@@ -214,6 +214,16 @@ public class StepwisePlugin extends Plugin
 	 * quest states only after one.
 	 */
 	private boolean questStatesDirty;
+
+	/**
+	 * Each poll runs a client script per quest, so a var change polls only the quest its var
+	 * belongs to, plus every quest the var tables cannot name. A quest-point change, or a login,
+	 * polls all of them: it catches a completion whose var is not the mapped one. A start or
+	 * stage change through such a var (Shield of Arrav's Black Arm path) waits for the next
+	 * full poll.
+	 */
+	private final Set<Quest> questsToPoll = EnumSet.noneOf(Quest.class);
+	private boolean fullQuestPoll;
 
 	/**
 	 * Item ids by lower-case name, for every item seen in a container this session.
@@ -529,6 +539,7 @@ public class StepwisePlugin extends Plugin
 		Arrays.fill(previousXp, -1);
 		containerContents.clear();
 		previousQuestStates.clear();
+		questsToPoll.clear();
 		lastQuestVarValues.clear();
 		// PlayerState.regionId is transient, so the next session starts with no region. A
 		// tracker still holding the old region would report "no change" and never fill it in
@@ -723,6 +734,7 @@ public class StepwisePlugin extends Plugin
 		previousQuestStates.clear();
 		// The first tick after login polls, catching anything that moved before it.
 		questStatesDirty = true;
+		fullQuestPoll = true;
 		for (Quest quest : Quest.values())
 		{
 			try
@@ -1366,7 +1378,12 @@ public class StepwisePlugin extends Plugin
 		if (questStatesDirty && !previousQuestStates.isEmpty())
 		{
 			questStatesDirty = false;
-			for (Quest quest : Quest.values())
+			Set<Quest> polled = fullQuestPoll ? EnumSet.allOf(Quest.class) : EnumSet.noneOf(Quest.class);
+			polled.addAll(QuestVarbits.unmappedQuests());
+			polled.addAll(questsToPoll);
+			questsToPoll.clear();
+			fullQuestPoll = false;
+			for (Quest quest : polled)
 			{
 				try
 				{
@@ -1420,6 +1437,15 @@ public class StepwisePlugin extends Plugin
 	public void onVarbitChanged(VarbitChanged event)
 	{
 		questStatesDirty = true;
+		if (event.getVarpId() == VarPlayerID.QP)
+		{
+			fullQuestPoll = true;
+		}
+		Quest varQuest = QuestVarbits.questOfVar(event.getVarbitId(), event.getVarpId());
+		if (varQuest != null)
+		{
+			questsToPoll.add(varQuest);
+		}
 		if (coreEngine == null || !loginReady)
 		{
 			return;

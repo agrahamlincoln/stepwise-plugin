@@ -35,6 +35,7 @@ public class StepwisePersistence {
     private static final String KEY_SUPPRESSED_STEPS = "suppressedSteps";
     private static final String KEY_RECENT_MANUAL_STEPS = "recentManualSteps";
     private static final String KEY_GUIDE_VERSION = "guideVersion";
+    private static final String KEY_STEP_IDS_VERSION = "stepIdsVersion";
     private static final String KEY_BIRDHOUSE_PREFIX = "birdhouse.";
     private static final String KEY_TEARS_OF_GUTHIX_RESET = "tearsOfGuthixReset";
     private static final String KEY_TEARS_OF_GUTHIX_ADVENTURES = "tearsOfGuthixAdventures";
@@ -50,7 +51,13 @@ public class StepwisePersistence {
     private static final String KEY_LAST_TOTAL_MINUTES = "lastTotalMinutes";
     private static final String KEY_LAST_RS_PROFILE = "lastRsProfile";
 
-    private static final long SAVE_DEBOUNCE_MS = 5000;
+    /** Debounce once a step mark or the bank snapshot changed: neither can be re-read at login. */
+    private static final long PROGRESS_SAVE_DEBOUNCE_MS = 5000;
+    /**
+     * Debounce for state alone (vars, XP, items). Each save serialises the whole player
+     * state on the client thread, and the login scan re-reads most of it from the game.
+     */
+    private static final long STATE_SAVE_DEBOUNCE_MS = 30000;
 
     private final ConfigStore store;
     private final Gson gson;
@@ -59,6 +66,7 @@ public class StepwisePersistence {
 
     private long lastSaveTime;
     private boolean dirty;
+    private boolean progressDirty;
 
     public StepwisePersistence(ConfigStore store, Gson base) {
         this.store = store;
@@ -184,14 +192,24 @@ public class StepwisePersistence {
         this.dirty = true;
     }
 
+    /** Mark a change the login scan cannot re-read (step marks, the bank), saved on the shorter debounce. */
+    public void markProgressDirty() {
+        this.dirty = true;
+        this.progressDirty = true;
+    }
+
+    /** How long after the last save the next debounced save waits. */
+    long debounceMillis() {
+        return progressDirty ? PROGRESS_SAVE_DEBOUNCE_MS : STATE_SAVE_DEBOUNCE_MS;
+    }
+
     /** Save if dirty and the debounce period has elapsed. Call from a periodic handler such as GameTick. */
     public void saveIfNeeded(PlayerState playerState, Set<StepId> completed,
             Set<StepId> skipped, Set<StepId> suppressed) {
         if (!dirty) {
             return;
         }
-        long now = System.currentTimeMillis();
-        if (now - lastSaveTime < SAVE_DEBOUNCE_MS) {
+        if (System.currentTimeMillis() - lastSaveTime < debounceMillis()) {
             return;
         }
         forceSave(playerState, completed, skipped, suppressed);
@@ -214,6 +232,7 @@ public class StepwisePersistence {
 
             lastSaveTime = System.currentTimeMillis();
             dirty = false;
+            progressDirty = false;
             log.debug("Stepwise state saved ({} completed, {} skipped, {} suppressed)",
                     completed.size(), skipped.size(), suppressed.size());
         } catch (Exception e) {
@@ -223,6 +242,15 @@ public class StepwisePersistence {
 
     public void saveGuideVersion(String version) {
         store.setRSProfileConfiguration(CONFIG_GROUP, KEY_GUIDE_VERSION, version);
+    }
+
+    /** The step-id version of the guide the saved step ids belong to; null when unrecorded. */
+    public String loadStepIdsVersion() {
+        return store.getRSProfileConfiguration(CONFIG_GROUP, KEY_STEP_IDS_VERSION);
+    }
+
+    public void saveStepIdsVersion(String version) {
+        store.setRSProfileConfiguration(CONFIG_GROUP, KEY_STEP_IDS_VERSION, version);
     }
 
     /**

@@ -5,6 +5,7 @@ import net.runelite.api.gameval.VarbitID;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -58,9 +59,9 @@ public final class BoatVarbits {
         VarbitID.SAILING_BOAT_4_BRAZIER, VarbitID.SAILING_BOAT_5_BRAZIER,
     };
 
-    // Facilities occupy position-indexed hotspots. The innoculation station (value 1) has a
-    // fixed hotspot: 5 on a skiff, 9 on a sloop. The keg (value 9) can be built in any deck
-    // hotspot, 0 through 12.
+    // Facilities occupy position-indexed hotspots. A hotspot's varbit holds the 1-based position
+    // of the built facility in that hotspot's option list, and 0 when nothing is built, so one
+    // facility reads a different value at each hotspot that offers it.
 
     /** All 13 facility hotspots per boat slot (slot 0..4 = boats 1..5). */
     private static final int[][] ALL_HOTSPOTS = {
@@ -101,16 +102,43 @@ public final class BoatVarbits {
         },
     };
 
-    /** The hotspot value the innoculation station reports once built. */
-    public static final int FACILITY_BUILT = 1;
-    /** The hotspot value the keg facility reports once built. */
-    public static final int KEG_VALUE = 9;
-
     /** The game spells it with a double n, and so does every label Stepwise shows. */
-    public static final String INOCULATION_STATION = "innoculation station";
+    private static final String INOCULATION_STATION = "innoculation station";
     private static final String KEG = "keg";
+    private static final String CRYSTAL_EXTRACTOR = "crystal extractor";
+    private static final String WIND_CATCHER = "wind catcher";
+    /** The wind catcher's variant: a boat holds one or the other, never both. */
+    private static final String GALE_CATCHER = "gale catcher";
 
-    /** Number of boat slots the game keeps; every table above has one entry per slot. */
+    /**
+     * The value each hotspot reports when the facility is built there, indexed by hotspot, with
+     * 0 where the facility cannot go; one row per boat type: skiff first, then sloop. The values
+     * are the facility's 1-based position in each hotspot's option list in the client's
+     * sailing_boat_hotspot table. A facility missing here is never read.
+     */
+    private static final Map<String, int[][]> FACILITY_VALUES = Map.of(
+            INOCULATION_STATION, new int[][] {
+                {0, 0, 0, 0, 0, 1},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 1},
+            },
+            KEG, new int[][] {
+                {0, 9, 5},
+                {0, 2, 2, 9, 9, 5, 5},
+            },
+            CRYSTAL_EXTRACTOR, new int[][] {
+                {8, 17, 13},
+                {8, 10, 10, 17, 17, 13, 13},
+            },
+            WIND_CATCHER, new int[][] {
+                {2, 11, 7},
+                {2, 4, 4, 11, 11, 7, 7},
+            },
+            GALE_CATCHER, new int[][] {
+                {3, 12, 8},
+                {3, 5, 5, 12, 12, 8, 8},
+            });
+
+    /** Number of boat slots the game keeps; every per-slot table above has one entry per slot. */
     public static final int SLOTS = OWNED.length;
 
     private BoatVarbits() {
@@ -214,25 +242,26 @@ public final class BoatVarbits {
      * it cannot read never latches and claims nothing at login.
      */
     public static boolean isFacility(String facility, int boatType) {
-        if (boatType != 1 && boatType != 2) {
-            return false;
-        }
-        return facilityBuiltValue(facility) > 0;
+        return facilityValues(facility, boatType) != null;
     }
 
     /**
-     * The hotspot value reported when the named facility is built, or -1 for a facility
-     * Stepwise cannot read.
+     * The value the hotspot at {@code hotspot} reports when the facility is built there, or 0
+     * when the facility cannot go there or Stepwise cannot read it.
      */
-    public static int facilityBuiltValue(String facility) {
-        String canonical = canonicalFacilityName(facility);
-        if (INOCULATION_STATION.equals(canonical)) {
-            return FACILITY_BUILT;
+    public static int facilityValueAt(String facility, int boatType, int hotspot) {
+        int[] values = facilityValues(facility, boatType);
+        return values != null && hotspot >= 0 && hotspot < values.length ? values[hotspot] : 0;
+    }
+
+    /** The per-hotspot built values for a facility on a boat type, or null when unreadable. */
+    private static int[] facilityValues(String facility, int boatType) {
+        String name = canonicalFacilityName(facility);
+        int[][] rows = name == null ? null : FACILITY_VALUES.get(name);
+        if (rows == null || (boatType != 1 && boatType != 2)) {
+            return null;
         }
-        if (KEG.equals(canonical)) {
-            return KEG_VALUE;
-        }
-        return -1;
+        return rows[boatType - 1];
     }
 
     /**
@@ -246,44 +275,20 @@ public final class BoatVarbits {
     }
 
     /**
-     * The hotspot varbit holding a facility on the given boat type in a 0-based slot.
-     *
-     * @return the varbit id, or -1 when the facility has no fixed hotspot on that boat.
-     *         The keg can go in any hotspot, so it always reads -1 here; use {@link #facilityIds}.
-     */
-    public static int facilityVarbit(String facility, int boatType, int slot) {
-        int hotspot = fixedHotspot(facility, boatType);
-        return hotspot >= 0 ? ALL_HOTSPOTS[slot][hotspot] : -1;
-    }
-
-    /**
-     * Every slot's hotspot varbit for a facility on the given boat type, or an empty set when
-     * Stepwise cannot read the facility. For the keg, which can go in any hotspot, returns all 13
-     * hotspot varbits of every slot.
+     * Every slot's varbit for each hotspot that can hold the facility on the given boat type, or
+     * an empty set when Stepwise cannot read the facility.
      */
     public static Set<Integer> facilityIds(String facility, int boatType) {
-        boolean keg = KEG.equals(canonicalFacilityName(facility)) && (boatType == 1 || boatType == 2);
-        int hotspot = fixedHotspot(facility, boatType);
+        int[] values = facilityValues(facility, boatType);
         Set<Integer> ids = new LinkedHashSet<>();
-        for (int slot = 0; slot < SLOTS && (keg || hotspot >= 0); slot++) {
-            if (keg) {
-                addAll(ids, ALL_HOTSPOTS[slot]);
-            } else {
-                ids.add(ALL_HOTSPOTS[slot][hotspot]);
+        for (int slot = 0; values != null && slot < SLOTS; slot++) {
+            for (int hotspot = 0; hotspot < values.length; hotspot++) {
+                if (values[hotspot] > 0) {
+                    ids.add(ALL_HOTSPOTS[slot][hotspot]);
+                }
             }
         }
         return Collections.unmodifiableSet(ids);
-    }
-
-    /**
-     * The hotspot index a facility always occupies on a boat type, or -1 when it has none.
-     * The keg has no fixed hotspot, so facilityIds answers it from every hotspot instead.
-     */
-    private static int fixedHotspot(String facility, int boatType) {
-        if (!INOCULATION_STATION.equals(canonicalFacilityName(facility))) {
-            return -1;
-        }
-        return boatType == 1 ? 5 : boatType == 2 ? 9 : -1;
     }
 
     private static int[] componentTable(String component) {

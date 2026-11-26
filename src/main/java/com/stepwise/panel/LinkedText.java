@@ -4,8 +4,6 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -69,33 +67,6 @@ class LinkedText extends JPanel
 			add(row);
 		}
 		revalidate();
-	}
-
-	// --- Test seams ---
-
-	/** The body text as it reads, inline links shown as their labels. */
-	String bodyTextForTest()
-	{
-		return body.plainText();
-	}
-
-	LinkedTextPane bodyForTest()
-	{
-		return body;
-	}
-
-	/** The trailing rows' text, in order. */
-	List<String> rowTextsForTest()
-	{
-		List<String> texts = new ArrayList<>();
-		for (int i = 0; i < getComponentCount(); i++)
-		{
-			if (getComponent(i) instanceof JTextArea)
-			{
-				texts.add(((JTextArea) getComponent(i)).getText());
-			}
-		}
-		return texts;
 	}
 
 	@Override

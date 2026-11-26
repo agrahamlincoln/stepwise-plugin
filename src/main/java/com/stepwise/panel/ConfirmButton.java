@@ -75,10 +75,4 @@ class ConfirmButton extends JButton
 			setForeground(restingColour);
 		}
 	}
-
-	/** Test seam: the timer that disarms an unconfirmed click, or null. */
-	Timer disarmTimerForTest()
-	{
-		return disarmTimer;
-	}
 }

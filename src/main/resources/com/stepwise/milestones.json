@@ -146,6 +146,49 @@
       "label": "Wintertodt and early quests (end of 1.1)"
     },
     {
+      "anchor_step_id": "1.2.7.3",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Tower of Life",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Ribbiting Tale of a Lily Pad Labour Dispute",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Client of Kourend",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Knight's Sword",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Sleeping Giants",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Tourist Trap",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Feud",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Observatory Quest",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "observatory_quest",
+      "label": "Desert quests and Observatory Quest (early 1.2)"
+    },
+    {
       "anchor_step_id": "1.2.13.8",
       "criteria": {
         "conditions": [
@@ -212,6 +255,86 @@
       },
       "id": "fishing_thieving_phase",
       "label": "Fishing and Thieving phase (late 1.2)"
+    },
+    {
+      "anchor_step_id": "1.2.14.6",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Observatory Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fight Arena",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Tree Gnome Village",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Waterfall Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Death on the Isle",
+            "type": "questComplete"
+          },
+          {
+            "level": 50,
+            "skill": "Agility",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Fishing Contest",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "fishing_contest",
+      "label": "Fishing Contest after the Rogues' Den (end of 1.2)"
+    },
+    {
+      "anchor_step_id": "1.3.6.20",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Death on the Isle",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Fishing Contest",
+            "type": "questComplete"
+          },
+          {
+            "level": 75,
+            "skill": "Thieving",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Tai Bwo Wannai Trio",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Dragon Slayer I",
+            "type": "questStarted"
+          },
+          {
+            "questName": "A Ruff Situation",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Dig Site",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "the_dig_site",
+      "label": "A Ruff Situation and The Dig Site (early 1.3)"
     },
     {
       "anchor_step_id": "1.3.12.5",
@@ -441,6 +564,50 @@
       "label": "Troll Country and Great Kourend quest cluster (early 1.4)"
     },
     {
+      "anchor_step_id": "1.4.21.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Troll Stronghold",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Ascent of Arceuus",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Holy Grail",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Grand Tree",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Plague City",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Below Ice Mountain",
+            "type": "questComplete"
+          },
+          {
+            "level": 40,
+            "skill": "Smithing",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Garden of Tranquillity",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "garden_of_tranquillity",
+      "label": "Blast Furnace and Garden of Tranquillity (mid 1.4)"
+    },
+    {
       "anchor_step_id": "1.4.28.16",
       "criteria": {
         "conditions": [
@@ -563,6 +730,49 @@
       "label": "Dragon Slayer I (early 2.1)"
     },
     {
+      "anchor_step_id": "2.1.13.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Desert Treasure I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Dragon Slayer I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Underground Pass",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Troll Romance",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Heroes' Quest",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Recruitment Drive",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Wanted!",
+            "type": "questStarted"
+          },
+          {
+            "questName": "Shilo Village",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "shilo_village",
+      "label": "Recruitment Drive and Shilo Village (early 2.1)"
+    },
+    {
       "anchor_step_id": "2.1.20.1",
       "criteria": {
         "conditions": [
@@ -655,6 +865,46 @@
       },
       "id": "monkey_madness_one",
       "label": "Monkey Madness I (mid 2.1)"
+    },
+    {
+      "anchor_step_id": "2.1.34.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Underground Pass",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Monkey Madness I",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Haunted Mine",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Heroes' Quest",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Zogre Flesh Eaters",
+            "type": "questComplete"
+          },
+          {
+            "level": 50,
+            "skill": "Smithing",
+            "type": "skillLevel"
+          },
+          {
+            "questName": "Pandemonium",
+            "type": "questComplete"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "pandemonium",
+      "label": "Heroes' Quest, Zogre Flesh Eaters and Pandemonium (late 2.1)"
     },
     {
       "anchor_step_id": "2.1.45.3",
@@ -1039,6 +1289,54 @@
       },
       "id": "sailing_seventy_five",
       "label": "The Blood Moon Rises and 75 Sailing (mid 3.2)"
+    },
+    {
+      "anchor_step_id": "3.2.9.1",
+      "criteria": {
+        "conditions": [
+          {
+            "questName": "Dragon Slayer II",
+            "type": "questComplete"
+          },
+          {
+            "questName": "Desert Treasure II - The Fallen Empire",
+            "type": "questComplete"
+          },
+          {
+            "questName": "The Blood Moon Rises",
+            "type": "questComplete"
+          },
+          {
+            "level": 86,
+            "skill": "Smithing",
+            "type": "skillLevel"
+          },
+          {
+            "level": 88,
+            "skill": "Crafting",
+            "type": "skillLevel"
+          },
+          {
+            "level": 75,
+            "skill": "Sailing",
+            "type": "skillLevel"
+          },
+          {
+            "level": 80,
+            "skill": "Woodcutting",
+            "type": "skillLevel"
+          },
+          {
+            "level": 84,
+            "skill": "Herblore",
+            "type": "skillLevel"
+          }
+        ],
+        "mode": "all",
+        "type": "composite"
+      },
+      "id": "herblore_eighty_four",
+      "label": "Northern Ocean Sailing upgrades and 84 Herblore (late 3.2)"
     }
   ]
 }

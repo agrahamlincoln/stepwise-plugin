@@ -16,6 +16,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
 import javax.swing.text.DefaultCaret;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -38,10 +40,12 @@ import net.runelite.client.ui.FontManager;
  * Card showing a single guide step: instruction text, completion criteria
  * with progress bars, and action buttons (Mark Done / Skip).
  *
- * <p>An active card has an orange left accent, full colour and the step id, with Mark Done
- * and Skip beside it when it has an engine to act on. A non-active card is muted and has
- * neither, except an In Progress card ({@link #inProgress}), which keeps both inside a
- * Details fold.
+ * <p>An active card has an orange left accent and full colour, with Mark Done, Skip and the
+ * {@code <} and {@code >} preview arrows when it has an engine to act on. A previewed card
+ * takes the accent {@link #showAsPreview} gives it. A non-active card is muted and has no
+ * buttons, except an In Progress card ({@link #inProgress}), which keeps Mark Done and Skip
+ * inside a Details fold. A previewed card and the welcome page's read-only card get the
+ * arrows through {@link #addPaging}.
  */
 public class StepCardPanel extends JPanel
 {
@@ -90,6 +94,9 @@ public class StepCardPanel extends JPanel
 	/** The "From now on" callout; null on a card that is not the current step. */
 	private JPanel fromNowOnContainer;
 
+	/** Mark Done and Skip's width: room for two 18px preview arrows beside them on the card. */
+	private static final int ROW_BUTTON_WIDTH = 74;
+
 	/** The Skip button, or null when the card has none. */
 	private ConfirmButton skipButton;
 
@@ -133,13 +140,7 @@ public class StepCardPanel extends JPanel
 
 		if (active)
 		{
-			setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createCompoundBorder(
-					BorderFactory.createEmptyBorder(2, 0, 2, 0),
-					BorderFactory.createMatteBorder(1, 3, 1, 1, ColorScheme.BRAND_ORANGE)
-				),
-				BorderFactory.createEmptyBorder(6, 6, 6, 4)
-			));
+			setBorder(activeBorder(ColorScheme.BRAND_ORANGE));
 		}
 		else
 		{
@@ -185,11 +186,64 @@ public class StepCardPanel extends JPanel
 		criteriaGuard.shouldRebuild(criteriaSignature(criteria, criteriaAlternatives));
 		add(criteriaContainer);
 
-		if (active)
+		JPanel buttonRow = active ? buildButtonRow(completedByClick) : null;
+		if (buttonRow != null)
 		{
+			// The < and > arrows only look: unlike Undo, they let a player reread an earlier
+			// step or read ahead without changing their progress. Of the live cards only the
+			// current one has them, since an In Progress step sits outside the guide's order.
+			buttonRow.add(PreviewBar.paging(stepId, coreEngine.getGuide(), coreEngine::previewStep),
+				BorderLayout.EAST);
 			add(Box.createVerticalStrut(4));
-			add(buildButtonRow(completedByClick));
+			add(buttonRow);
 		}
+	}
+
+	/**
+	 * Adds the preview arrows to a card built without buttons, such as a previewed card or the
+	 * welcome page's read-only card, in the corner where the current card carries them.
+	 *
+	 * @param action a button for Mark Done's place, or null
+	 */
+	void addPaging(JComponent action, JPanel paging)
+	{
+		JPanel row = buttonRow();
+		if (action != null)
+		{
+			row.add(action, BorderLayout.WEST);
+		}
+		row.add(paging, BorderLayout.EAST);
+		add(Box.createVerticalStrut(4));
+		add(row);
+	}
+
+	private static JPanel buttonRow()
+	{
+		JPanel row = new JPanel(new BorderLayout());
+		row.setOpaque(false);
+		row.setAlignmentX(LEFT_ALIGNMENT);
+		row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
+		return row;
+	}
+
+	private static Border activeBorder(Color accent)
+	{
+		return BorderFactory.createCompoundBorder(
+			BorderFactory.createCompoundBorder(
+				BorderFactory.createEmptyBorder(2, 0, 2, 0),
+				BorderFactory.createMatteBorder(1, 3, 1, 1, accent)
+			),
+			BorderFactory.createEmptyBorder(6, 6, 6, 4)
+		);
+	}
+
+	/**
+	 * Marks the card as a preview of a step that is not the player's own: {@code accent}
+	 * replaces the orange of the current step.
+	 */
+	void showAsPreview(Color accent)
+	{
+		setBorder(activeBorder(accent));
 	}
 
 	// --- In-place update methods ---
@@ -359,12 +413,6 @@ public class StepCardPanel extends JPanel
 		return preStep.getCriterion() != null && preStep.getCriterion().isMet();
 	}
 
-	/** Test seam: lets tests assert a no-op tick keeps the pre-step row components. */
-	JPanel getPreStepContainerForTest()
-	{
-		return preStepContainer;
-	}
-
 	/**
 	 * Shows the step's "From now on" callout under the instruction: a standing habit that
 	 * starts here. Fixed for the step, so the owner sets it once when it builds the card; a
@@ -401,12 +449,6 @@ public class StepCardPanel extends JPanel
 			setSize(width, getPreferredSize().height);
 			doLayout();
 		}
-	}
-
-	/** Test seam: the container holding the "From now on" callout. */
-	JPanel getFromNowOnContainerForTest()
-	{
-		return fromNowOnContainer;
 	}
 
 	/**
@@ -637,12 +679,6 @@ public class StepCardPanel extends JPanel
 		}
 	}
 
-	/** Test seam: lets tests assert a bank-hint flip recolours rows without rebuilding them. */
-	JPanel getCriteriaContainerForTest()
-	{
-		return criteriaContainer;
-	}
-
 	/**
 	 * The line above several criteria: "Need just one" when any one completes the step,
 	 * otherwise how many are met. A waived criterion counts as met.
@@ -832,46 +868,30 @@ public class StepCardPanel extends JPanel
 	}
 
 	/**
-	 * Mark Done and Skip on the left, the step id on the right.
+	 * Mark Done and Skip, or null on a card without an engine, where nothing clicked could
+	 * reach an account.
 	 *
 	 * @param manual whether the step has nothing the game can detect, so clicking is the
 	 *               only way it completes
 	 */
 	private JPanel buildButtonRow(boolean manual)
 	{
-		JPanel row = new JPanel(new BorderLayout());
-		row.setOpaque(false);
-		row.setAlignmentX(LEFT_ALIGNMENT);
-		row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
-		if (coreEngine != null)
-		{
-			row.add(buildButtons(manual), BorderLayout.WEST);
-		}
-
-		if (stepId != null)
-		{
-			row.add(PanelSections.smallLabel(stepId, COLOR_SUBTLE), BorderLayout.EAST);
-		}
 		if (coreEngine == null)
 		{
-			// Without an engine the row keeps only the step id, since nothing clicked there
-			// could reach an account, and holds no room for buttons that are not there.
-			row.setMaximumSize(new Dimension(Integer.MAX_VALUE, row.getPreferredSize().height));
+			return null;
 		}
-
+		JPanel row = buttonRow();
+		row.add(buildButtons(manual), BorderLayout.WEST);
 		return row;
 	}
 
-	/** Test seam: the Skip button, or null when the card has none. */
-	ConfirmButton getSkipButtonForTest()
-	{
-		return skipButton;
-	}
-
-	/** Mark Done and Skip. */
+	/**
+	 * Mark Done and Skip, narrower than the other action buttons and with no outer gaps, so
+	 * the current card's preview arrows fit beside them on one row.
+	 */
 	private JPanel buildButtons(boolean manual)
 	{
-		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 4, 0));
+		JPanel buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
 		buttons.setOpaque(false);
 
 		// Mark Done is prominent only on manual steps. On a detectable step a prominent button
@@ -891,6 +911,7 @@ public class StepCardPanel extends JPanel
 			() -> coreEngine.skipStep(new StepId(stepId))), COLOR_SKIP_BG, COLOR_SKIP_FG);
 
 		buttons.add(doneBtn);
+		buttons.add(Box.createHorizontalStrut(4));
 		buttons.add(skipButton);
 		return buttons;
 	}
@@ -943,9 +964,21 @@ public class StepCardPanel extends JPanel
 		return btn;
 	}
 
+	/**
+	 * A small button {@code width} pixels wide with thin side margins: the look-and-feel's
+	 * default margins clip a label such as "Mark Done" once the button is narrower than 86.
+	 */
+	static <B extends JButton> B smallButton(B btn, int width)
+	{
+		smallButton(btn).setMargin(new Insets(0, 2, 0, 2));
+		btn.setPreferredSize(new Dimension(width, 20));
+		return btn;
+	}
+
+	/** Mark Done or Skip: {@link #ROW_BUTTON_WIDTH} wide, in the given colours. */
 	private static <B extends JButton> B smallButton(B btn, Color bg, Color fg)
 	{
-		smallButton(btn).setBackground(bg);
+		smallButton(btn, ROW_BUTTON_WIDTH).setBackground(bg);
 		btn.setForeground(fg);
 		return btn;
 	}

@@ -1,6 +1,7 @@
 package com.stepwise.guide;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.util.function.Supplier;
 @Slf4j
 public final class GuideLoader {
     private static final String GUIDE_RESOURCE = "/com/stepwise/guide.json";
+    private static final String SUMMARIES_RESOURCE = "/com/stepwise/entry_summaries.json";
 
     private GuideLoader() {
     }
@@ -59,9 +61,19 @@ public final class GuideLoader {
     }
 
     public static StepwiseGuide loadFromResource(Gson base) {
-        return readResource(GUIDE_RESOURCE, reader -> parse(reader, base), () -> {
+        StepwiseGuide guide = readResource(GUIDE_RESOURCE, reader -> parse(reader, base), () -> {
             throw new IllegalStateException("Failed to load the guide from " + GUIDE_RESOURCE);
         });
+        return guide.withStepRemaps(StepRemaps.loadFromResource(base))
+                .withEntrySummaries(readResource(SUMMARIES_RESOURCE,
+                        reader -> parseEntrySummaries(reader, base), Collections::emptyMap));
+    }
+
+    /** Entry id to its one-line summary, as {@code entry_summaries.json} holds them. */
+    public static Map<String, String> parseEntrySummaries(Reader reader, Gson base) {
+        Map<String, String> summaries = base.fromJson(reader,
+                new TypeToken<Map<String, String>>() { }.getType());
+        return summaries == null ? Collections.emptyMap() : Collections.unmodifiableMap(summaries);
     }
 
     public static StepwiseGuide parse(Reader reader, Gson base) {
@@ -92,12 +104,15 @@ public final class GuideLoader {
         return new StepwiseGuide(
                 raw.getTitle(),
                 raw.getVersion(),
+                raw.getStepIdsVersion(),
                 raw.getTotalMinutes(),
                 chapters,
                 allSteps,
                 contextMap,
                 positionIndex,
                 assumptionSpans,
-                hardwoodCarriers);
+                hardwoodCarriers,
+                raw.getStepRemaps(),
+                raw.getEntrySummaries());
     }
 }

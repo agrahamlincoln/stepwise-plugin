@@ -1,6 +1,7 @@
 package com.stepwise.panel;
 
 import com.stepwise.engine.CoreEngine;
+import com.stepwise.engine.NavigatorState;
 import com.stepwise.guide.StepwiseGuide;
 import com.stepwise.guide.StepContext;
 import com.stepwise.guide.StepId;
@@ -13,6 +14,7 @@ import java.awt.BorderLayout;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -22,6 +24,7 @@ import java.util.function.Consumer;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import javax.annotation.Nullable;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -40,9 +43,9 @@ import net.runelite.client.ui.PluginPanel;
  * Main side panel for Stepwise, registered via NavigationButton in StepwisePlugin.startUp().
  *
  * <p>A fixed header (title, step counter, chapter and section) sits above a scrolling
- * column that stacks, top to bottom: recent history, the entry block, the current step card,
- * the restock strip, in-progress steps, upcoming steps, timers, reset controls and the
- * version footer.
+ * column that stacks, top to bottom: the Step Navigator, recent history, the preview banner
+ * while a step is previewed, the entry block, the current step card, the restock strip,
+ * in-progress steps, upcoming steps, timers, reset controls and the version footer.
  */
 public class StepwisePanel extends PluginPanel
 {
@@ -126,6 +129,26 @@ public class StepwisePanel extends PluginPanel
 	/** The last session's entry: title and guide text only, never the items or route chips. */
 	private final EntryBlock lastSessionEntry;
 	private final TimerPanel lastSessionTimers;
+	/** Holds the preview banner while a step is previewed, and nothing otherwise. */
+	private final JPanel previewSlot;
+	/** Holds the Step Navigator for the loaded guide. */
+	private final JPanel navigatorSlot;
+	/** Null until a guide is set. EDT only. */
+	private StepNavigator navigator;
+	/**
+	 * What the navigator draws for the account shown, copied on the thread that drives its
+	 * engine; null with no account shown. EDT only.
+	 */
+	private NavigatorState navigatorProgress;
+	/** Keyed on the player's step id, or null with no banner. EDT only. */
+	private final RebuildGuard previewGuard = new RebuildGuard();
+	/** Whether the last rebuild showed a preview, so leaving one redraws the card. EDT only. */
+	private boolean lastDisplayedPreview;
+	/**
+	 * The player's own step under the last preview, so a move redraws the previewed card and
+	 * its Move here. EDT only.
+	 */
+	private String lastDisplayedLiveStepId;
 
 	public StepwisePanel()
 	{
@@ -191,7 +214,13 @@ public class StepwisePanel extends PluginPanel
 		lastSessionEntry = EntryBlock.textOnly();
 		lastSessionTimers = new TimerPanel();
 
+		previewSlot = PanelSections.column();
+
+		navigatorSlot = PanelSections.column();
+
+		contentPanel.add(navigatorSlot);
 		contentPanel.add(historyPanel);
+		contentPanel.add(previewSlot);
 		contentPanel.add(entryBlock);
 		contentPanel.add(currentStepContainer);
 		contentPanel.add(restockStrip);
@@ -260,6 +289,17 @@ public class StepwisePanel extends PluginPanel
 	{
 		this.guide = guide;
 		forgetWaitingBuild();
+		SwingUtilities.invokeLater(() ->
+		{
+			navigatorSlot.removeAll();
+			navigator = guide != null ? new StepNavigator(guide, this) : null;
+			if (navigator != null)
+			{
+				navigatorSlot.add(navigator);
+				navigator.refresh();
+			}
+			navigatorSlot.revalidate();
+		});
 	}
 
 	public void setPersistence(StepwisePersistence persistence)
@@ -304,7 +344,9 @@ public class StepwisePanel extends PluginPanel
 			return;
 		}
 
-		DashboardSnapshot snapshot = coreEngine.getLastSnapshot();
+		DashboardSnapshot live = coreEngine.getLastSnapshot();
+		DashboardSnapshot preview = coreEngine.getPreviewSnapshot();
+		DashboardSnapshot snapshot = preview != null && live != null ? preview : live;
 		long currentVersion = coreEngine.getSnapshotVersion();
 		if (loggedOutAtVersion >= 0)
 		{
@@ -328,7 +370,13 @@ public class StepwisePanel extends PluginPanel
 		}
 		lastSnapshotVersion = currentVersion;
 
-		SwingUtilities.invokeLater(() -> rebuildFromSnapshot(snapshot));
+		DashboardSnapshot liveWhilePreviewing = snapshot != live ? live : null;
+		NavigatorState progress = NavigatorState.of(coreEngine);
+		SwingUtilities.invokeLater(() ->
+		{
+			navigatorProgress = progress;
+			rebuildFromSnapshot(snapshot, liveWhilePreviewing);
+		});
 	}
 
 	/**
@@ -383,6 +431,7 @@ public class StepwisePanel extends PluginPanel
 		SwingUtilities.invokeLater(() ->
 		{
 			lastSession = null;
+			navigatorProgress = null;
 			// The summary on the resume card was just saved, so the page must be rebuilt.
 			waitingGuard.reset();
 			showWaiting();
@@ -408,8 +457,39 @@ public class StepwisePanel extends PluginPanel
 				return;
 			}
 			lastSession = session;
+			navigatorProgress = NavigatorState.of(session);
 			showWaiting();
 		});
+	}
+
+	/**
+	 * What the Step Navigator draws: the last session's account on the welcome page, the
+	 * live one otherwise, or null with neither. EDT only.
+	 */
+	@Nullable
+	NavigatorState navigatorProgress()
+	{
+		return navigatorProgress;
+	}
+
+	/**
+	 * Previews {@code stepId}, or ends the preview with null, in the account the panel shows.
+	 * The last session's engine never resolves again and no tick runs while logged out, so
+	 * the welcome page redraws here. EDT only.
+	 */
+	void previewStep(StepId stepId)
+	{
+		CoreEngine engine = loggedOutAtVersion >= 0 ? lastSession : coreEngine;
+		if (engine == null)
+		{
+			return;
+		}
+		engine.previewStep(stepId);
+		if (engine == lastSession)
+		{
+			navigatorProgress = NavigatorState.of(engine);
+			showWaiting();
+		}
 	}
 
 	/**
@@ -465,8 +545,10 @@ public class StepwisePanel extends PluginPanel
 	 */
 	private void showWaiting()
 	{
+		refreshNavigator();
 		CoreEngine session = lastSession;
-		if (!waitingGuard.shouldRebuild(session != null ? session : Boolean.TRUE))
+		if (!waitingGuard.shouldRebuild(session != null
+			? Arrays.asList(session, session.getPreviewSnapshot()) : Boolean.TRUE))
 		{
 			return;
 		}
@@ -488,6 +570,11 @@ public class StepwisePanel extends PluginPanel
 		// same step, so forget it, or the next snapshot updates a detached card in place.
 		currentStepCard = null;
 		lastDisplayedStepId = null;
+		// A preview open at logout belongs to the account that left.
+		previewSlot.removeAll();
+		previewGuard.shouldRebuild(null);
+		lastDisplayedPreview = false;
+		lastDisplayedLiveStepId = null;
 		// No restock chips on the welcome page: nobody is logged in to restock.
 		restockStrip.update(null, iconProvider);
 		inProgressPanel.rebuild(null, null, null);
@@ -515,14 +602,38 @@ public class StepwisePanel extends PluginPanel
 		versionFooter.setVisible(!welcome && guide != null && guide.getVersion() != null);
 	}
 
-	private void rebuildFromSnapshot(DashboardSnapshot snapshot)
+	/**
+	 * @param live the player's own snapshot when {@code snapshot} is a preview of another
+	 *             step, else null
+	 */
+	private void rebuildFromSnapshot(DashboardSnapshot snapshot, DashboardSnapshot live)
 	{
 		waitingGuard.reset();
 		showWelcomeChrome(false);
 		GuidePosition pos = snapshot.getGuidePosition();
 		String currentStepId = pos != null ? pos.getStepId() : null;
-		boolean stepChanged = !Objects.equals(currentStepId, lastDisplayedStepId);
+		boolean previewing = live != null;
+		String liveStepId = live != null && live.getGuidePosition() != null
+			? live.getGuidePosition().getStepId() : null;
+		// A previewed card is also redrawn when the player's own step moves, which decides
+		// whether it offers Move here. Otherwise it stays put: a per-tick rebuild would disarm
+		// a Move here waiting for its confirming click.
+		boolean stepChanged = !Objects.equals(currentStepId, lastDisplayedStepId)
+			|| previewing != lastDisplayedPreview
+			|| previewing && !Objects.equals(liveStepId, lastDisplayedLiveStepId);
 		lastDisplayedStepId = currentStepId;
+		lastDisplayedPreview = previewing;
+		lastDisplayedLiveStepId = previewing ? liveStepId : null;
+
+		boolean showBanner = previewing && currentStepId != null;
+		if (previewGuard.shouldRebuild(showBanner ? liveStepId : null))
+		{
+			previewSlot.removeAll();
+			if (showBanner)
+			{
+				previewSlot.add(PreviewBar.banner(liveStepId, this::previewStep));
+			}
+		}
 
 		if (pos != null)
 		{
@@ -579,8 +690,17 @@ public class StepwisePanel extends PluginPanel
 
 			if (current != null)
 			{
-				StepCardPanel card = currentCard(coreEngine, current, guidanceCollapsed,
-					collapsed -> guidanceCollapsed = collapsed);
+				// A previewed card has no engine, so it offers no Mark Done or Skip. It gets the
+				// arrows where the current card has them, and Move here in Mark Done's place.
+				StepCardPanel card = currentCard(previewing ? null : coreEngine, current,
+					guidanceCollapsed, collapsed -> guidanceCollapsed = collapsed);
+				if (previewing)
+				{
+					card.showAsPreview(PreviewBar.ACCENT);
+					card.addPaging(PreviewBar.moveHere(currentStepId, liveStepId,
+							coreEngine.getGuide(), coreEngine),
+						PreviewBar.paging(currentStepId, coreEngine.getGuide(), this::previewStep));
+				}
 				card.presize(containerWidth);
 				currentStepContainer.add(card);
 				currentStepCard = card;
@@ -604,8 +724,18 @@ public class StepwisePanel extends PluginPanel
 			versionFooter.setVisible(true);
 		}
 
+		refreshNavigator();
 		revalidate();
 		repaint();
+	}
+
+	/** Redraws the Step Navigator when what it shows has moved. EDT only. */
+	private void refreshNavigator()
+	{
+		if (navigator != null)
+		{
+			navigator.refresh();
+		}
 	}
 
 	/**
@@ -623,7 +753,9 @@ public class StepwisePanel extends PluginPanel
 	/**
 	 * The welcome page with the last account's progress below its resume card: the current
 	 * step's entry and card, then its timers, all read-only, then the guide credit. The
-	 * entry, card and timers span the column like a logged-in account's own.
+	 * entry, card and timers span the column like a logged-in account's own. The card's
+	 * arrows preview other steps in its place, under the preview banner. The card offers no
+	 * Move here, since nothing done while logged out is saved.
 	 */
 	private void addLastSessionPage(CoreEngine session, int containerWidth)
 	{
@@ -631,9 +763,17 @@ public class StepwisePanel extends PluginPanel
 		addWelcome(top);
 		currentStepContainer.add(top);
 
-		DashboardSnapshot snapshot = session.getLastSnapshot();
+		DashboardSnapshot live = session.getLastSnapshot();
+		DashboardSnapshot preview = session.getPreviewSnapshot();
+		DashboardSnapshot snapshot = preview != null ? preview : live;
 		GuidePosition pos = snapshot != null ? snapshot.getGuidePosition() : null;
 		String stepId = pos != null ? pos.getStepId() : null;
+		if (preview != null && stepId != null)
+		{
+			GuidePosition livePos = live != null ? live.getGuidePosition() : null;
+			currentStepContainer.add(PreviewBar.banner(
+				livePos != null ? livePos.getStepId() : null, this::previewStep));
+		}
 		StepContext context = stepId != null
 			? session.getGuide().stepContextMap().get(new StepId(stepId)) : null;
 		lastSessionEntry.update(context, stepId, session.getGuide());
@@ -642,11 +782,19 @@ public class StepwisePanel extends PluginPanel
 		StepCardPanel card = lastSessionCard(snapshot, pos);
 		if (card != null)
 		{
+			if (preview != null)
+			{
+				card.showAsPreview(PreviewBar.ACCENT);
+			}
+			if (stepId != null)
+			{
+				card.addPaging(null, PreviewBar.paging(stepId, session.getGuide(), this::previewStep));
+			}
 			card.presize(containerWidth);
 			currentStepContainer.add(card);
 		}
 
-		lastSessionTimers.rebuild(snapshot, session, iconProvider);
+		lastSessionTimers.rebuild(live, session, iconProvider);
 		currentStepContainer.add(lastSessionTimers);
 
 		JPanel bottom = welcomeColumn(0, 12);
@@ -906,11 +1054,6 @@ public class StepwisePanel extends PluginPanel
 		String number = raw.substring(0, colon).trim();
 		String name = raw.substring(colon + 1).trim();
 		return name.isEmpty() ? number : number + " · " + name;
-	}
-
-	JTextArea getSectionTextForTest()
-	{
-		return sectionText;
 	}
 
 	/**

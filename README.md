@@ -25,6 +25,8 @@ The panel shows the step you are on and the ones around it.
 - Steps check themselves off from quest progress, items, skill levels, diary and combat tasks,
   places reached and furniture you build.
 - Mark Done, Skip and Undo cover anything the game cannot show.
+- The < and > buttons on the card preview the step before or after it without marking
+  anything.
 - An optional in-game overlay shows the current step. Turn it off in the settings.
 - When an XP lamp, tome or book asks you to choose a skill, the skill the guide recommends is
   outlined. Turn it off in the settings.
@@ -32,11 +34,24 @@ The panel shows the step you are on and the ones around it.
   Expand the setting to choose how it reaches you. By default RuneLite sends nothing while
   the game window has focus.
 
+## Step Navigator
+
+Open the Step Navigator to page through the guide's entries, up to six at a time within a
+section. Its header opens a menu of every section.
+
+<img src="images/navigator.png" width="260" alt="Step Navigator paged back to finished entries, one of them previewed">
+
+- Behind your current entry, a green tick marks a finished entry, two chevrons a skipped one,
+  and a half-filled circle one with steps left. Current brings you back to your own page.
+- Click another entry to preview its first step. Your place in the guide stays put, and Back
+  returns you to your current step.
+- On a step behind your own, Move here makes it your current step.
+
 ## Items needed
 
 The guide's item list for your stretch appears as an inventory grid.
 
-<img src="images/items.png" width="260" alt="Items needed grid: carried, banked and missing items">
+<img src="images/items.png" width="260" alt="Items needed grid: banked and missing items">
 
 - Green border: you carry it. Orange border: it is in your bank. Dimmed icon: you do not have it.
 - Open your bank once so Stepwise can see it. It keeps what it saw between sessions.
@@ -60,7 +75,7 @@ Bird houses, Tears of Guthix and Miscellania count down in the panel.
 
 - A bird house InfoBox counts down your run. Hide it in the settings.
 - Logged out, the panel shows your last account's step, its progress through the guide and
-  its timers.
+  its timers, and the Step Navigator pages through its entries.
 
 ## How to use
 

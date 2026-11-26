@@ -36,11 +36,6 @@ class ItemSquare extends JPanel
 		setFont(FontManager.getRunescapeSmallFont());
 	}
 
-	String getCountForTest()
-	{
-		return count;
-	}
-
 	@Override
 	protected void paintComponent(Graphics g)
 	{

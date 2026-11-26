@@ -130,12 +130,6 @@ class LinkedTextPane extends JTextPane
 		setCursor(DEFAULT);
 	}
 
-	/** The text as it reads, links shown as their labels. */
-	String plainText()
-	{
-		return parsed.text;
-	}
-
 	/**
 	 * The URL of the label under a point, or null. A point past the end of a line, or in the
 	 * gap beside a label, is not on it: {@code viewToModel2D} answers with the nearest offset

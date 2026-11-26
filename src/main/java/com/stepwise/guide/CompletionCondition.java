@@ -670,15 +670,25 @@ public abstract class CompletionCondition {
     public static class QuestProgress extends CompletionCondition {
         @SerializedName("questName") String questName;
         @SerializedName("minValue") int minValue;
+        /**
+         * The checkpoint the game records at {@code minValue}, written as a full sentence. Null
+         * shows the quest stage before {@code minValue} instead.
+         */
+        @SerializedName("taskDescription") String taskDescription;
 
         public QuestProgress(String questName, int minValue) {
-            this(questName, minValue, null);
+            this(questName, minValue, null, null);
         }
 
         public QuestProgress(String questName, int minValue, List<StepId> servesSteps) {
+            this(questName, minValue, null, servesSteps);
+        }
+
+        public QuestProgress(String questName, int minValue, String taskDescription, List<StepId> servesSteps) {
             super(servesSteps);
             this.questName = questName;
             this.minValue = minValue;
+            this.taskDescription = taskDescription;
         }
     }
 
@@ -696,6 +706,12 @@ public abstract class CompletionCondition {
         @SerializedName("maxValue") Integer maxValue;
         /** Human-readable description, e.g. "Charge the scrying orb at the Wizards' Tower". */
         @SerializedName("taskDescription") String taskDescription;
+        /**
+         * What the panel draws beside the row, since a var id means nothing to a player:
+         * {@code item:<id>}, {@code skill:<Skill>}, {@code quest}, {@code diary}, {@code gp} or
+         * {@code none}. Null draws nothing.
+         */
+        @SerializedName("icon") String icon;
 
         public VarbitValue(int varbitId, int minValue, String taskDescription) {
             this(varbitId, minValue, null, taskDescription, null);
@@ -711,6 +727,7 @@ public abstract class CompletionCondition {
             this.minValue = minValue;
             this.maxValue = maxValue;
             this.taskDescription = taskDescription;
+            this.icon = null;
         }
     }
 
@@ -725,6 +742,8 @@ public abstract class CompletionCondition {
          * Camp".
          */
         @SerializedName("taskDescription") String taskDescription;
+        /** The panel's icon for the row, as on {@link VarbitValue#icon}. */
+        @SerializedName("icon") String icon;
 
         public VarpBitValue(int varpId, int bit, String taskDescription) {
             this(varpId, bit, taskDescription, null);
@@ -735,6 +754,7 @@ public abstract class CompletionCondition {
             this.varpId = varpId;
             this.bit = bit;
             this.taskDescription = taskDescription;
+            this.icon = null;
         }
     }
 
@@ -751,6 +771,8 @@ public abstract class CompletionCondition {
         @SerializedName("minValue") int minValue;
         /** Human-readable task description, e.g. "Build a bird house at the northern space". */
         @SerializedName("taskDescription") String taskDescription;
+        /** The panel's icon for the row, as on {@link VarbitValue#icon}. */
+        @SerializedName("icon") String icon;
 
         public VarpValue(int varp, int minValue, String taskDescription) {
             this(varp, minValue, taskDescription, null);
@@ -761,6 +783,7 @@ public abstract class CompletionCondition {
             this.varp = varp;
             this.minValue = minValue;
             this.taskDescription = taskDescription;
+            this.icon = null;
         }
     }
 

@@ -304,16 +304,4 @@ class ItemsNeededView extends JPanel
 	{
 		return shownCount;
 	}
-
-	// --- Test seams ---
-
-	List<ItemSquare> getSquaresForTest()
-	{
-		return squares;
-	}
-
-	JTextArea getUnresolvedForTest()
-	{
-		return unresolved;
-	}
 }

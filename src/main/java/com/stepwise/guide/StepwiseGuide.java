@@ -16,6 +16,8 @@ import java.util.Set;
 public class StepwiseGuide {
     @SerializedName("title") String title;
     @SerializedName("version") String version;
+    /** Identifies the guide's step ids, so a save records which ids it holds. */
+    @SerializedName("canonicalVersion") String stepIdsVersion;
     /**
      * The guide's whole length in minutes of play, by the guide's own timings: the sum of every
      * entry's {@link Entry#getEstimatedDurationMinutes()}.
@@ -45,6 +47,14 @@ public class StepwiseGuide {
     /** Steps carrying {@link GuideStep#getKingdomHardwood()}, in guide order. Populated by {@link GuideLoader#freezeGuide(StepwiseGuide)}. */
     @lombok.Getter(lombok.AccessLevel.NONE)
     transient List<HardwoodCarrier> hardwoodCarriersCached;
+
+    /** Maps saved step ids onto this guide's; null when none are bundled. */
+    @lombok.With
+    transient StepRemaps stepRemaps;
+
+    /** Entry id &rarr; a one-line summary of the entry in player terms; null or empty when none are bundled. */
+    @lombok.With
+    transient Map<String, String> entrySummaries;
 
     public List<GuideStep> allSteps() {
         return allStepsCached;

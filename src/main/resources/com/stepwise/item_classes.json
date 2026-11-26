@@ -381,6 +381,135 @@
         }
       ]
     },
+    "dark_area_light": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Candle",
+          "id": 36
+        },
+        {
+          "name": "Lit candle",
+          "id": 33
+        },
+        {
+          "name": "Black candle",
+          "id": 38
+        },
+        {
+          "name": "Lit black candle",
+          "id": 32
+        },
+        {
+          "name": "Torch",
+          "id": 596
+        },
+        {
+          "name": "Lit torch",
+          "id": 594
+        },
+        {
+          "name": "Mining helmet",
+          "id": 5014
+        },
+        {
+          "name": "Mining helmet",
+          "id": 5013
+        },
+        {
+          "name": "Kandarin headgear 1",
+          "id": 13137
+        },
+        {
+          "name": "Kandarin headgear 2",
+          "id": 13138
+        },
+        {
+          "name": "Kandarin headgear 3",
+          "id": 13139
+        },
+        {
+          "name": "Kandarin headgear 4",
+          "id": 13140
+        },
+        {
+          "name": "Bruma torch",
+          "id": 20720
+        },
+        {
+          "name": "Firemaking cape",
+          "id": 9804
+        },
+        {
+          "name": "Firemaking cape",
+          "id": 9805
+        },
+        {
+          "name": "Max cape",
+          "id": 13280
+        },
+        {
+          "name": "Max cape",
+          "id": 13342
+        },
+        {
+          "name": "Bullseye lantern",
+          "id": 4550
+        },
+        {
+          "name": "Bullseye lantern",
+          "id": 4548
+        },
+        {
+          "name": "Emerald lantern",
+          "id": 9065
+        },
+        {
+          "name": "Emerald lantern",
+          "id": 9064
+        },
+        {
+          "name": "Emerald lantern",
+          "id": 20722
+        },
+        {
+          "name": "Sapphire lantern",
+          "id": 4702
+        },
+        {
+          "name": "Sapphire lantern",
+          "id": 4701
+        },
+        {
+          "name": "Sapphire lantern",
+          "id": 4700
+        },
+        {
+          "name": "Oil lantern",
+          "id": 4539
+        },
+        {
+          "name": "Oil lantern",
+          "id": 4537
+        },
+        {
+          "name": "Candle lantern",
+          "id": 4532
+        },
+        {
+          "name": "Candle lantern",
+          "id": 4534
+        },
+        {
+          "name": "Candle lantern",
+          "id": 4529
+        },
+        {
+          "name": "Candle lantern",
+          "id": 4531
+        }
+      ]
+    },
     "spade": {
       "members": [
         {
@@ -630,6 +759,430 @@
         {
           "name": "Mystic mud staff",
           "id": 6563
+        }
+      ]
+    },
+    "air_staff": {
+      "members": [
+        {
+          "name": "Staff of air",
+          "id": 1381
+        },
+        {
+          "name": "Air battlestaff",
+          "id": 1397
+        },
+        {
+          "name": "Mystic air staff",
+          "id": 1405
+        },
+        {
+          "name": "Smoke battlestaff",
+          "id": 11998
+        },
+        {
+          "name": "Mystic smoke staff",
+          "id": 12000
+        },
+        {
+          "name": "Mist battlestaff",
+          "id": 20730
+        },
+        {
+          "name": "Mystic mist staff",
+          "id": 20733
+        },
+        {
+          "name": "Dust battlestaff",
+          "id": 20736
+        },
+        {
+          "name": "Mystic dust staff",
+          "id": 20739
+        }
+      ]
+    },
+    "water_staff": {
+      "members": [
+        {
+          "name": "Staff of water",
+          "id": 1383
+        },
+        {
+          "name": "Water battlestaff",
+          "id": 1395
+        },
+        {
+          "name": "Mystic water staff",
+          "id": 1403
+        },
+        {
+          "name": "Steam battlestaff",
+          "id": 11787
+        },
+        {
+          "name": "Steam battlestaff (or)",
+          "id": 12795
+        },
+        {
+          "name": "Mystic steam staff",
+          "id": 11789
+        },
+        {
+          "name": "Mystic steam staff (or)",
+          "id": 12796
+        },
+        {
+          "name": "Mist battlestaff",
+          "id": 20730
+        },
+        {
+          "name": "Mystic mist staff",
+          "id": 20733
+        },
+        {
+          "name": "Mud battlestaff",
+          "id": 6562
+        },
+        {
+          "name": "Mystic mud staff",
+          "id": 6563
+        }
+      ]
+    },
+    "fire_staff": {
+      "members": [
+        {
+          "name": "Staff of fire",
+          "id": 1387
+        },
+        {
+          "name": "Fire battlestaff",
+          "id": 1393
+        },
+        {
+          "name": "Mystic fire staff",
+          "id": 1401
+        },
+        {
+          "name": "Smoke battlestaff",
+          "id": 11998
+        },
+        {
+          "name": "Mystic smoke staff",
+          "id": 12000
+        },
+        {
+          "name": "Steam battlestaff",
+          "id": 11787
+        },
+        {
+          "name": "Steam battlestaff (or)",
+          "id": 12795
+        },
+        {
+          "name": "Mystic steam staff",
+          "id": 11789
+        },
+        {
+          "name": "Mystic steam staff (or)",
+          "id": 12796
+        },
+        {
+          "name": "Lava battlestaff",
+          "id": 3053
+        },
+        {
+          "name": "Lava battlestaff (or)",
+          "id": 21198
+        },
+        {
+          "name": "Mystic lava staff",
+          "id": 3054
+        },
+        {
+          "name": "Mystic lava staff (or)",
+          "id": 21200
+        }
+      ]
+    },
+    "candle": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Candle",
+          "id": 36
+        },
+        {
+          "name": "Lit candle",
+          "id": 33
+        }
+      ]
+    },
+    "black_candle": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Black candle",
+          "id": 38
+        },
+        {
+          "name": "Lit black candle",
+          "id": 32
+        }
+      ]
+    },
+    "plant_pot": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Empty plant pot",
+          "id": 5350
+        },
+        {
+          "name": "Filled plant pot",
+          "id": 5354
+        }
+      ]
+    },
+    "scrying_orb": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Scrying orb (empty)",
+          "id": 5519
+        },
+        {
+          "name": "Scrying orb (full)",
+          "id": 5518
+        }
+      ]
+    },
+    "druid_pouch": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Druid pouch (filled)",
+          "id": 2958
+        },
+        {
+          "name": "Druid pouch (empty)",
+          "id": 2957
+        }
+      ]
+    },
+    "scorpion_cage": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Scorpion cage (empty)",
+          "id": 456
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 457
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 458
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 459
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 460
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 461
+        },
+        {
+          "name": "Scorpion cage",
+          "id": 462
+        },
+        {
+          "name": "Scorpion cage (full)",
+          "id": 463
+        }
+      ]
+    },
+    "mining_helmet": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Mining helmet",
+          "id": 5014
+        },
+        {
+          "name": "Mining helmet (lit)",
+          "id": 5013
+        }
+      ]
+    },
+    "silvthrill_rod": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Silvthrill rod (enchanted)",
+          "id": 7638
+        },
+        {
+          "name": "Silvthrill rod",
+          "id": 7637
+        }
+      ]
+    },
+    "sled": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Sled (waxed)",
+          "id": 4084
+        },
+        {
+          "name": "Sled",
+          "id": 4083
+        }
+      ]
+    },
+    "celestial_ring": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Celestial ring",
+          "id": 25541
+        },
+        {
+          "name": "Celestial ring (uncharged)",
+          "id": 25539
+        }
+      ]
+    },
+    "ring_of_charos": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Ring of charos(a)",
+          "id": 6465
+        },
+        {
+          "name": "Ring of charos",
+          "id": 4202
+        }
+      ]
+    },
+    "agility_potion": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Agility potion(4)",
+          "id": 3032
+        },
+        {
+          "name": "Agility potion(3)",
+          "id": 3034
+        },
+        {
+          "name": "Agility potion(2)",
+          "id": 3036
+        },
+        {
+          "name": "Agility potion(1)",
+          "id": 3038
+        }
+      ]
+    },
+    "ranging_potion": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Ranging potion(4)",
+          "id": 2444
+        },
+        {
+          "name": "Ranging potion(3)",
+          "id": 169
+        },
+        {
+          "name": "Ranging potion(2)",
+          "id": 171
+        },
+        {
+          "name": "Ranging potion(1)",
+          "id": 173
+        },
+        {
+          "name": "Divine ranging potion(4)",
+          "id": 23733
+        },
+        {
+          "name": "Divine ranging potion(3)",
+          "id": 23736
+        },
+        {
+          "name": "Divine ranging potion(2)",
+          "id": 23739
+        },
+        {
+          "name": "Divine ranging potion(1)",
+          "id": 23742
+        }
+      ]
+    },
+    "ghostspeak_amulet": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Ghostspeak amulet",
+          "id": 552
+        },
+        {
+          "name": "Ghostspeak amulet (enchanted)",
+          "id": 4250
+        }
+      ]
+    },
+    "ibans_staff": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Iban's staff",
+          "id": 1409
+        },
+        {
+          "name": "Iban's staff (u)",
+          "id": 12658
+        },
+        {
+          "name": "Iban's staff (o)",
+          "id": 33330
+        },
+        {
+          "name": "Iban's staff (u) (o)",
+          "id": 33332
+        }
+      ]
+    },
+    "hellcat": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Hellcat",
+          "id": 7582
+        },
+        {
+          "name": "Hell-kitten",
+          "id": 7583
+        },
+        {
+          "name": "Wily hellcat",
+          "id": 7585
+        },
+        {
+          "name": "Lazy hellcat",
+          "id": 7584
         }
       ]
     },
@@ -910,6 +1463,27 @@
         {
           "name": "Hellcat",
           "id": 7585
+        }
+      ]
+    },
+    "fremennik_sea_boots": {
+      "exact_in_conditions": true,
+      "members": [
+        {
+          "name": "Fremennik sea boots 1",
+          "id": 13129
+        },
+        {
+          "name": "Fremennik sea boots 2",
+          "id": 13130
+        },
+        {
+          "name": "Fremennik sea boots 3",
+          "id": 13131
+        },
+        {
+          "name": "Fremennik sea boots 4",
+          "id": 13132
         }
       ]
     }

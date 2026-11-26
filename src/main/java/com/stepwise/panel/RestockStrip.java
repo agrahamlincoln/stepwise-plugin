@@ -188,12 +188,4 @@ class RestockStrip extends JPanel
 	{
 		return StepwisePanel.CONTENT_WIDTH - box.getInsets().left - box.getInsets().right;
 	}
-
-	// --- Test seams ---
-
-	/** The callout's text area, so a test can check it was sized before first paint. */
-	JTextArea calloutTextForTest()
-	{
-		return calloutText;
-	}
 }

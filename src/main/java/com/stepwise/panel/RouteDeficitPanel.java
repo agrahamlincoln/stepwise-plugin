@@ -606,12 +606,6 @@ public class RouteDeficitPanel extends JPanel
 		}
 	}
 
-	/** Test seam: the arc's Skip button, or null when the entry offers no skip. */
-	ConfirmButton getSkipButtonForTest()
-	{
-		return skipButton;
-	}
-
 	/** Skips every step under the earn arc's entries, through the engine's normal skip path. */
 	private void skipArc()
 	{

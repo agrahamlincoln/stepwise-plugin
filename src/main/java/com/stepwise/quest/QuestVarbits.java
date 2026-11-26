@@ -1,8 +1,12 @@
 package com.stepwise.quest;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import net.runelite.api.Quest;
 
 /**
  * Quest varbit and varplayer IDs mapped to quest names, for detecting quest progress
@@ -286,5 +290,36 @@ public final class QuestVarbits {
      */
     public static Map<Integer, String> getVarplayerMap() {
         return Collections.unmodifiableMap(VARPLAYER_MAP);
+    }
+
+    private static final Map<String, Quest> QUESTS_BY_NAME = new HashMap<>();
+    private static final Set<Quest> UNMAPPED_QUESTS = EnumSet.noneOf(Quest.class);
+
+    static {
+        Set<String> mapped = new HashSet<>(VARBIT_MAP.values());
+        mapped.addAll(VARPLAYER_MAP.values());
+        for (Quest quest : Quest.values()) {
+            QUESTS_BY_NAME.put(quest.getName(), quest);
+            if (!mapped.contains(quest.getName())) {
+                UNMAPPED_QUESTS.add(quest);
+            }
+        }
+    }
+
+    /** The quest a var here tracks, or null when the var tracks none. */
+    public static Quest questOfVar(int varbitId, int varpId) {
+        String name = varbitId != -1 ? VARBIT_MAP.get(varbitId) : null;
+        if (name == null) {
+            name = VARPLAYER_MAP.get(varpId);
+        }
+        return name != null ? QUESTS_BY_NAME.get(name) : null;
+    }
+
+    /**
+     * Quests no var here tracks. Their state can move on any var change, so a poll that
+     * otherwise follows var changes must always include them.
+     */
+    public static Set<Quest> unmappedQuests() {
+        return Collections.unmodifiableSet(UNMAPPED_QUESTS);
     }
 }

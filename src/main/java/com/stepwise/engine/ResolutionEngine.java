@@ -9,6 +9,7 @@ import com.stepwise.guide.ItemLocation;
 import com.stepwise.guide.NpcInteractions;
 import com.stepwise.guide.SlayerMasters;
 import com.stepwise.guide.StepId;
+import com.stepwise.guide.StepContext;
 import com.stepwise.guide.StepStatus;
 import com.stepwise.diary.DiaryVarbits;
 import com.stepwise.model.ItemStack;
@@ -156,6 +157,8 @@ public final class ResolutionEngine {
         Map<StepId, StepStatus> resolved = new LinkedHashMap<>();
         List<ResolvedStep> results = new ArrayList<>();
         boolean hasActive = false;
+        // The ACTIVE step's entry, once the walk has passed it.
+        String activeEntry = null;
 
         // The steps that waive the conditions serving them. Seeded with the completed steps;
         // the scans below add steps already met, and the main loop adds each step it resolves
@@ -211,22 +214,28 @@ public final class ResolutionEngine {
             } else if (allCompleted.contains(id) && !suppressedAutoLatch.contains(id)) {
                 status = StepStatus.COMPLETED;
             } else {
-                boolean met = conditionMet(step.getCompletion(), state, allCompleted);
                 boolean prereqsMet = prerequisitesSatisfied(step, resolved);
                 // A met transient condition (items, GP, location) counts only once the
                 // prerequisites are complete; on a far-future step it is coincidence. Monotonic
-                // facts complete regardless of position.
+                // facts complete regardless of position. An untrusted reading is never taken,
+                // which spares an item count over the whole bank on every far-future step.
                 boolean trusted = prereqsMet || isMonotonic(step.getCompletion());
-                if (met && trusted && !suppressedAutoLatch.contains(id)) {
+                boolean met = trusted && conditionMet(step.getCompletion(), state, allCompleted);
+                if (met && !suppressedAutoLatch.contains(id)) {
                     status = StepStatus.COMPLETED;
                 } else if (prereqsMet && step.isBackground()) {
                     // An open-ended activity (contract grind, crop growth) must not take the
-                    // active slot, or it hides every task meant to interleave with it. Checked
-                    // before hasActive so it resolves the same whether or not a step is ACTIVE.
-                    status = StepStatus.BACKGROUND;
+                    // active slot, or it hides every task meant to interleave with it, so it
+                    // never competes for that slot. One in an entry past the active step's
+                    // waits PENDING for the player to reach it: its prerequisites can read done
+                    // early, back-filled by work finished out of order, and the guide places it
+                    // where it does for a reason.
+                    status = activeEntry != null && !activeEntry.equals(entryOf(guide, id))
+                            ? StepStatus.PENDING : StepStatus.BACKGROUND;
                 } else if (prereqsMet && !hasActive) {
                     status = StepStatus.ACTIVE;
                     hasActive = true;
+                    activeEntry = entryOf(guide, id);
                 } else {
                     status = StepStatus.PENDING;
                 }
@@ -1189,6 +1198,13 @@ public final class ResolutionEngine {
         return waived;
     }
 
+    /** The id of the entry holding {@code id}, or "" when the guide places it in none. */
+    private static String entryOf(StepwiseGuide guide, StepId id) {
+        Map<StepId, StepContext> contexts = guide.stepContextMap();
+        StepContext context = contexts != null ? contexts.get(id) : null;
+        return context != null && context.getEntryId() != null ? context.getEntryId() : "";
+    }
+
     private static boolean prerequisitesSatisfied(GuideStep step, Map<StepId, StepStatus> resolved) {
         if (step.getPrerequisites() == null || step.getPrerequisites().isEmpty()) {
             return true;
@@ -1246,16 +1262,13 @@ public final class ResolutionEngine {
             return false;
         }
         int slot = findBoatSlot(state, boatType);
-        int expectedValue = BoatVarbits.facilityBuiltValue(c.getFacility());
-        if (slot < 0 || expectedValue < 0) {
+        if (slot < 0) {
             return false;
         }
-        if (BoatVarbits.INOCULATION_STATION.equals(BoatVarbits.canonicalFacilityName(c.getFacility()))) {
-            int hotspot = BoatVarbits.facilityVarbit(c.getFacility(), boatType, slot);
-            return varbitValue(state, hotspot) == expectedValue;
-        }
-        for (int hotspot : BoatVarbits.hotspotsForSlot(slot)) {
-            if (varbitValue(state, hotspot) == expectedValue) {
+        int[] hotspots = BoatVarbits.hotspotsForSlot(slot);
+        for (int hotspot = 0; hotspot < hotspots.length; hotspot++) {
+            int built = BoatVarbits.facilityValueAt(c.getFacility(), boatType, hotspot);
+            if (built > 0 && varbitValue(state, hotspots[hotspot]) == built) {
                 return true;
             }
         }

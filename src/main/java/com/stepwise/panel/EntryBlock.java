@@ -9,14 +9,10 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -459,88 +455,5 @@ class EntryBlock extends JPanel
 	private static void style(JComponent chip, boolean isOpen)
 	{
 		PanelSections.styleChip(chip, isOpen, CHIP_OPEN, CHIP_SHUT, COLOR_CHIP_TEXT);
-	}
-
-	// --- Test seams ---
-
-	Open openForTest()
-	{
-		return open;
-	}
-
-	/**
-	 * How wide the wider of the two chip rows would be with these labels, in the panel's own
-	 * font, with all three route indicators showing a blank icon of the chip's icon size.
-	 */
-	int chipRowWidthForTest(String text, String items, String gp, String skills, String quests)
-	{
-		textChip.setText(text);
-		itemsChip.setText(items);
-		textChip.setVisible(true);
-		itemsChip.setVisible(true);
-		Icon icon = new ImageIcon(new BufferedImage(CHIP_ICON_SIZE, CHIP_ICON_SIZE,
-			BufferedImage.TYPE_INT_ARGB));
-		setPart(gpPart, true, icon, "Coins", gp, COLOR_CHIP_TEXT, "");
-		setPart(skillsPart, true, icon, "Skills", skills, COLOR_CHIP_TEXT, "");
-		setPart(questsPart, true, icon, "Quests", quests, COLOR_CHIP_TEXT, "");
-		gpPart.setBorder(PART_FIRST);
-		skillsPart.setBorder(PART_NEXT);
-		questsPart.setBorder(PART_NEXT);
-		routeChip.setVisible(true);
-		placeRouteChip();
-		return Math.max(chipRow.getPreferredSize().width, routeRow.getPreferredSize().width);
-	}
-
-	/** Whether the route chip sits beside the other chips rather than on its own row. */
-	boolean routeChipInFirstRowForTest()
-	{
-		return routeChip.getParent() == chipRow;
-	}
-
-	/** Moves to an entry that asks for nothing, so the Items chip is hidden. */
-	void newEntryWithoutItemsForTest()
-	{
-		itemsChip.setVisible(false);
-		placeAfresh = true;
-		placeRouteChip();
-	}
-
-	/** The route chip's indicator texts, in order, for those showing. */
-	List<String> routePartsForTest()
-	{
-		List<String> texts = new ArrayList<>();
-		for (JLabel part : routeParts)
-		{
-			if (part.isVisible())
-			{
-				texts.add(part.getText());
-			}
-		}
-		return texts;
-	}
-
-	/** Simulates a click on the chip. */
-	void toggleForTest(Open chip)
-	{
-		toggle(chip);
-	}
-
-	/** How wide the title line would be with this title and duration, in their own fonts. */
-	int titleRowWidthForTest(String titleText, String durationText)
-	{
-		title.setText(titleText);
-		duration.setText(durationText);
-		return titleRow.getInsets().left + title.getPreferredSize().width + TITLE_GAP
-			+ duration.getPreferredSize().width;
-	}
-
-	String titleForTest()
-	{
-		return title.getText();
-	}
-
-	LinkedText textForTest()
-	{
-		return text;
 	}
 }

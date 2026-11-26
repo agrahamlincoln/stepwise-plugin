@@ -166,12 +166,10 @@ final class PanelSections
 	/** A clickable chip, shut: small text in {@code colour} on the chip background. */
 	static JLabel chip(String text, Color colour, Border shut, Runnable onClick)
 	{
-		JLabel chip = smallLabel(text, colour);
+		JLabel chip = link(text, colour, null, onClick);
 		chip.setOpaque(true);
 		chip.setBackground(CHIP_BG);
 		chip.setBorder(shut);
-		chip.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		chip.addMouseListener(clicks(onClick));
 		return chip;
 	}
 
@@ -186,6 +184,16 @@ final class PanelSections
 		chip.setBorder(open ? openBorder : shutBorder);
 		chip.setBackground(open ? CHIP_OPEN_BG : CHIP_BG);
 		chip.setForeground(open ? Color.WHITE : shutColour);
+	}
+
+	/** Small text in {@code colour} under a hand cursor that runs {@code onClick} on each click. */
+	static JLabel link(String text, Color colour, String tooltip, Runnable onClick)
+	{
+		JLabel link = smallLabel(text, colour);
+		link.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		link.setToolTipText(tooltip);
+		link.addMouseListener(clicks(onClick));
+		return link;
 	}
 
 	/** A listener that runs {@code action} on each click. */

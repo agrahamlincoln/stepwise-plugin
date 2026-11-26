@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
 
 /**
  * Central orchestrator.
@@ -79,7 +81,8 @@ public class CoreEngine {
 
     /**
      * Steps the user explicitly undid. Suppresses auto-latch until the step is manually
-     * re-completed, or until no pathway would latch it any more (see resolveAndRebuild).
+     * re-completed, until no pathway would latch it any more (see resolveAndRebuild), or until
+     * the user walks or moves back past it (see undoStep and moveToStep).
      */
     final Set<StepId> suppressedSteps;
 
@@ -172,6 +175,21 @@ public class CoreEngine {
     @Getter
     private DashboardSnapshot lastSnapshot;
 
+    /** The resolution {@link #lastSnapshot} was built from, which a preview re-reads. */
+    private List<ResolvedStep> lastResolved = Collections.emptyList();
+
+    /** The step the panel shows in place of the current one, or null. Client thread only. */
+    private StepId previewStepId;
+
+    /**
+     * The panel's view of {@link #previewStepId}: the account as it stands, with that step
+     * shown as the current one. Null when nothing is previewed. Never read by anything but the
+     * panel, so a preview moves no overlay and saves nothing. Client thread only, like
+     * {@link #lastSnapshot}.
+     */
+    @Getter
+    private DashboardSnapshot previewSnapshot;
+
     /**
      * The steps a game-event flush latched while each was the active step, oldest first.
      * {@link #takeAutoCompletedSteps} hands them on and clears the list. A click flushes
@@ -245,31 +263,47 @@ public class CoreEngine {
         // The login scene's spawns are held in the session set; re-adopt them after the swap.
         adoptSightingsSeenThisSession();
 
+        String savedVersion = persistence.loadGuideVersion();
+        String savedStepIds = persistence.loadStepIdsVersion();
+        // Saved ids name steps of the guide they were saved against; carry them to this one.
+        UnaryOperator<StepId> remap = guide.getStepRemaps() == null ? null
+                : guide.getStepRemaps().remapper(savedStepIds, savedVersion,
+                        guide.getStepIdsVersion());
+
         Set<StepId> completed = persistence.loadCompletedSteps();
         this.noPersistedProgress = completed.isEmpty();
-        this.completedSteps.addAll(completed);
-
-        this.skippedSteps.addAll(persistence.loadSkippedSteps());
-        this.suppressedSteps.addAll(persistence.loadSuppressedSteps());
+        addRemapped(completed, remap, completedSteps);
+        addRemapped(persistence.loadSkippedSteps(), remap, skippedSteps);
+        addRemapped(persistence.loadSuppressedSteps(), remap, suppressedSteps);
 
         List<StepId> recentManual = persistence.loadRecentManualSteps();
-        this.recentManualSteps.addAll(
-                recentManual.subList(0, Math.min(recentManual.size(), RECENT_MANUAL_LIMIT)));
+        addRemapped(recentManual.subList(0, Math.min(recentManual.size(), RECENT_MANUAL_LIMIT)),
+                remap, recentManualSteps);
 
-        String savedVersion = persistence.loadGuideVersion();
-        if (savedVersion != null && !savedVersion.equals(guide.getVersion())) {
-            // The shipped guide differs from the one this progress was saved against. Completed
-            // steps stay as saved. The logged-out preview loads read-only and logs this at DEBUG.
-            // The real load at the next login logs it at INFO.
+        if (remap != null) {
+            // Saved now, beside the versions below, so a client closed before the debounced
+            // save cannot store these ids under the wrong version.
+            persistence.forceSave(playerState, completedSteps, skippedSteps, suppressedSteps);
+            persistence.saveRecentManualSteps(recentManualSteps);
+        }
+        if (remap != null || savedVersion != null && !savedVersion.equals(guide.getVersion())) {
+            // The shipped guide differs from the one this progress was saved against. Step ids
+            // are mapped onto it when a transition covers the saved guide, and kept as saved
+            // otherwise. The welcome page's read-only load logs this at DEBUG. The real
+            // load at the next login logs it at INFO.
+            String ids = remap != null ? "mapped" : "kept";
             if (persistence.isReadOnly()) {
-                log.debug("Guide version differs from the saved one ({} → {}), completed steps kept",
-                        savedVersion, guide.getVersion());
+                log.debug("Guide differs from the saved one ({}/{} → {}/{}), step ids {}",
+                        savedVersion, savedStepIds, guide.getVersion(),
+                        guide.getStepIdsVersion(), ids);
             } else {
-                log.info("Guide version differs from the saved one ({} → {}), completed steps kept",
-                        savedVersion, guide.getVersion());
+                log.info("Guide differs from the saved one ({}/{} → {}/{}), step ids {}",
+                        savedVersion, savedStepIds, guide.getVersion(),
+                        guide.getStepIdsVersion(), ids);
             }
         }
         persistence.saveGuideVersion(guide.getVersion());
+        persistence.saveStepIdsVersion(guide.getStepIdsVersion());
 
         birdhouseTracker.loadPersisted(persistence.loadBirdhouses());
         tearsOfGuthixTracker.loadPersisted(persistence.loadTearsOfGuthixReset());
@@ -279,6 +313,17 @@ public class CoreEngine {
         resolveAndRebuild();
 
         log.debug("Loaded {} completed, {} skipped steps", completedSteps.size(), skippedSteps.size());
+    }
+
+    /** Add each of {@code ids} to {@code into} through {@code remap}, dropping ids it maps to null. */
+    private static void addRemapped(Collection<StepId> ids, UnaryOperator<StepId> remap,
+            Collection<StepId> into) {
+        for (StepId id : ids) {
+            StepId now = remap == null ? id : remap.apply(id);
+            if (now != null) {
+                into.add(now);
+            }
+        }
     }
 
     /**
@@ -305,6 +350,9 @@ public class CoreEngine {
         noPersistedProgress = false;
         resetPending = false;
         currentStepId = null;
+        lastResolved = Collections.emptyList();
+        previewStepId = null;
+        previewSnapshot = null;
         autoCompletedSteps.clear();
         loginResolvePending = false;
         birdhouseTracker.clear();
@@ -365,14 +413,23 @@ public class CoreEngine {
      * Apply milestone auto-latching: mark all steps up to the furthest cleared milestone's
      * anchor as completed, then rebuild the dashboard. Only called when there is no
      * existing persisted progress.
+     *
+     * <p>Stops short of a held step. A move back to the guide's first steps can leave nothing
+     * completed, and the fast-forward must not carry the player past the step they moved to.
      */
     void performMilestoneLatch() {
         List<StepId> latched = MilestoneLatcher.computeLatchedSteps(milestonesFile, guide, playerState);
+        for (int i = 0; i < latched.size(); i++) {
+            if (suppressedSteps.contains(latched.get(i))) {
+                latched = latched.subList(0, i);
+                break;
+            }
+        }
         if (latched.isEmpty()) {
             return;
         }
         completedSteps.addAll(latched);
-        persistence.markDirty();
+        persistence.markProgressDirty();
         resolveAndRebuild();
     }
 
@@ -399,6 +456,9 @@ public class CoreEngine {
             s.setBank(items);
             s.setBankLastSeen(Instant.now());
         });
+        // The game sends the bank only while it is open, so the snapshot is as hard to
+        // rebuild as a step mark.
+        persistence.markProgressDirty();
     }
 
     /**
@@ -859,7 +919,7 @@ public class CoreEngine {
             suppressedSteps.remove(stepId);
             resetKillCountsForStep(stepId);
             recordManualAction(stepId);
-            persistence.markDirty();
+            persistence.markProgressDirty();
             resolveAndRebuild();
             log.debug("Step {} marked done", stepId.getValue());
         };
@@ -875,7 +935,7 @@ public class CoreEngine {
             skippedSteps.add(stepId);
             completedSteps.remove(stepId);
             recordManualAction(stepId);
-            persistence.markDirty();
+            persistence.markProgressDirty();
             resolveAndRebuild();
             log.debug("Step {} skipped", stepId.getValue());
         };
@@ -902,7 +962,7 @@ public class CoreEngine {
                 skippedSteps.add(stepId);
                 completedSteps.remove(stepId);
             }
-            persistence.markDirty();
+            persistence.markProgressDirty();
             resolveAndRebuild();
             log.debug("{} steps skipped: {}", batch.size(), batch);
         };
@@ -911,20 +971,77 @@ public class CoreEngine {
 
     /**
      * Undo a step completion. Safe to call from any thread.
+     *
+     * <p>The step stays suppressed against auto-completion while its condition holds, so the
+     * undo sticks. Undos of the steps between it and the current step are released: a player
+     * who walks back one step at a time has done the steps they pass, and holding each one
+     * would make them click Mark Done on every step again on the way forward. An undo of a
+     * step beyond the current one is kept, since that is the player rejecting a completion,
+     * not passing it.
      */
     public void undoStep(StepId stepId) {
         Runnable action = () -> {
             flushBeforeClick();
             completedSteps.remove(stepId);
             skippedSteps.remove(stepId);
+            Map<String, Integer> positions = guide.stepPositionIndex();
+            int at = positions.getOrDefault(stepId.getValue(), -1);
+            int current = currentStepId == null ? -1
+                    : positions.getOrDefault(currentStepId.getValue(), -1);
+            if (at >= 0 && current > at) {
+                suppressedSteps.removeIf(id -> {
+                    int position = positions.getOrDefault(id.getValue(), -1);
+                    return position > at && position <= current;
+                });
+            }
             suppressedSteps.add(stepId);
             if (recentManualSteps.remove(stepId)) {
                 persistence.saveRecentManualSteps(recentManualSteps);
             }
-            persistence.markDirty();
+            persistence.markProgressDirty();
             resolveAndRebuild();
             log.debug("Step {} undone, still suppressed: {}", stepId.getValue(),
                     suppressedSteps.contains(stepId));
+        };
+        runOnClientThread(action);
+    }
+
+    /**
+     * Make {@code stepId}, a step behind the current one, the current step, and end any
+     * preview. Does nothing for a step that is not behind the current one. Safe to call from
+     * any thread.
+     *
+     * <p>Every step from it to the current step loses its done or skipped mark, its place in
+     * Recent and any undo that held it, so a step the game still shows done completes again
+     * on the resolve below and the rest wait to be done again. The step itself is then held
+     * like an undone step, or a condition that still holds would complete it at once and the
+     * move would go nowhere. Marks beyond the current step stay: the move does not pass them.
+     */
+    public void moveToStep(StepId stepId) {
+        Runnable action = () -> {
+            flushBeforeClick();
+            Map<String, Integer> positions = guide.stepPositionIndex();
+            int at = positions.getOrDefault(stepId.getValue(), -1);
+            int current = currentStepId == null ? -1
+                    : positions.getOrDefault(currentStepId.getValue(), -1);
+            if (at < 0 || current <= at) {
+                return;
+            }
+            Predicate<StepId> passed = id -> {
+                int position = positions.getOrDefault(id.getValue(), -1);
+                return position >= at && position <= current;
+            };
+            completedSteps.removeIf(passed);
+            skippedSteps.removeIf(passed);
+            suppressedSteps.removeIf(passed);
+            suppressedSteps.add(stepId);
+            if (recentManualSteps.removeIf(passed)) {
+                persistence.saveRecentManualSteps(recentManualSteps);
+            }
+            previewStepId = null;
+            persistence.markProgressDirty();
+            resolveAndRebuild();
+            log.debug("Moved back to step {}", stepId.getValue());
         };
         runOnClientThread(action);
     }
@@ -1003,6 +1120,8 @@ public class CoreEngine {
             persistence.forceSave(playerState, completedSteps, skippedSteps, suppressedSteps);
 
             lastSnapshot = null;
+            previewStepId = null;
+            previewSnapshot = null;
             snapshotVersion++;
 
             resetPending = true;
@@ -1031,7 +1150,7 @@ public class CoreEngine {
             flushBeforeClick();
             playerState.setBank(Collections.emptyList());
             playerState.setBankLastSeen(null);
-            persistence.markDirty();
+            persistence.markProgressDirty();
             resolveAndRebuild();
             log.info("Bank snapshot cleared");
         });
@@ -1424,8 +1543,10 @@ public class CoreEngine {
         for (ResolvedStep rs : resolved) {
             statusByStep.put(rs.getStepId(), rs.getStatus());
         }
-        suppressedSteps.removeIf(id ->
-                !isAutoLatchable(id, statusByStep.getOrDefault(id, StepStatus.PENDING)));
+        if (suppressedSteps.removeIf(id ->
+                !isAutoLatchable(id, statusByStep.getOrDefault(id, StepStatus.PENDING)))) {
+            persistence.markProgressDirty();
+        }
 
         // Auto-latch every latchable, unsuppressed step (pathways in isAutoLatchable). Pure
         // travel steps latch once a dependent's condition is met, which covers a player in the
@@ -1447,6 +1568,7 @@ public class CoreEngine {
                 }
                 if (isAutoLatchable(id, rs.getStatus())) {
                     completedSteps.add(id);
+                    persistence.markProgressDirty();
                     activeLatched |= id.equals(activeBefore);
                     // Record latch provenance for the retract check. A catch-up latch (serves
                     // edge, closure, pure-travel, softLatch) legitimately has an unmet direct
@@ -1488,6 +1610,7 @@ public class CoreEngine {
                         && !ResolutionEngine.allServedStepsComplete(
                                 lastStep.getCompletion(), completedSteps)) {
                     completedSteps.remove(lastCompleted);
+                    persistence.markProgressDirty();
                     resolved = ResolutionEngine.resolveSteps(
                             playerState, guide, completedSteps, skippedSteps, suppressedSteps);
                     log.debug("Retracted step {} (auto-latched but items left inventory)",
@@ -1521,6 +1644,50 @@ public class CoreEngine {
             snapshotVersion++;
         }
         lastSnapshot = newSnapshot;
+        lastResolved = resolved;
+
+        DashboardSnapshot oldPreview = previewSnapshot;
+        rebuildPreview();
+        if (!snapshotContentEquals(oldPreview, previewSnapshot)) {
+            snapshotVersion++;
+        }
+    }
+
+    /**
+     * Show {@code stepId} in the panel as if it were the current step, or stop with null.
+     * The current step itself also stops the preview, so paging back onto it shows the live
+     * card. Nothing about the account changes. Safe to call from any thread.
+     */
+    public void previewStep(StepId stepId) {
+        runOnClientThread(() -> {
+            previewStepId = stepId != null && !stepId.equals(currentStepId)
+                    && stepIndex.containsKey(stepId) ? stepId : null;
+            rebuildPreview();
+            snapshotVersion++;
+        });
+    }
+
+    /**
+     * Rebuilds {@link #previewSnapshot} from the last resolution, with the previewed step
+     * active in place of the real one.
+     */
+    private void rebuildPreview() {
+        if (previewStepId == null || playerState == null || lastResolved.isEmpty()) {
+            previewSnapshot = null;
+            return;
+        }
+        List<ResolvedStep> shifted = new ArrayList<>(lastResolved.size());
+        for (ResolvedStep rs : lastResolved) {
+            StepStatus status = rs.getStatus();
+            if (rs.getStepId().equals(previewStepId)) {
+                status = StepStatus.ACTIVE;
+            } else if (status == StepStatus.ACTIVE) {
+                status = StepStatus.PENDING;
+            }
+            shifted.add(new ResolvedStep(rs.getStepId(), status));
+        }
+        previewSnapshot = SnapshotBuilder.buildSnapshot(playerState, guide, previewStepId,
+                stepIndex, guide.stepContextMap(), shifted, recentManualSteps);
     }
 
     /**
